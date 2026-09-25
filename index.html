@@ -458,93 +458,231 @@
 </div>
 
 <script>
+/* ============ SVG IMAGES (designer-made, adapted to each category) ============ */
+function svgEncode(svg) {
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg.replace(/\s+/g,' ').trim());
+}
+
+const SVG_HYGIENE = svgEncode(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+    <defs><linearGradient id="h" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient></defs>
+    <rect width="400" height="300" fill="url(#h)"/>
+    <circle cx="340" cy="40" r="80" fill="#ffffff" opacity="0.08"/>
+    <circle cx="40" cy="270" r="100" fill="#ffffff" opacity="0.06"/>
+    <path d="M110 130 Q110 100 145 100 L215 100 Q250 100 250 130 L250 190 Q250 220 215 220 L145 220 Q110 220 110 190 Z" fill="#ffffff" opacity="0.95"/>
+    <path d="M110 150 L250 150" stroke="#0ea5e9" stroke-width="3"/>
+    <path d="M110 175 L250 175" stroke="#0ea5e9" stroke-width="3"/>
+    <path d="M110 200 L250 200" stroke="#0ea5e9" stroke-width="3"/>
+    <path d="M110 130 Q80 150 110 190" stroke="#ffffff" stroke-width="4" fill="none"/>
+    <path d="M250 130 Q280 150 250 190" stroke="#ffffff" stroke-width="4" fill="none"/>
+    <rect x="290" y="160" width="50" height="90" rx="8" fill="#ffffff" opacity="0.95"/>
+    <rect x="300" y="140" width="30" height="25" rx="4" fill="#ffffff" opacity="0.95"/>
+    <rect x="305" y="128" width="20" height="15" rx="3" fill="#ffffff" opacity="0.95"/>
+    <text x="315" y="215" font-size="18" text-anchor="middle" fill="#0ea5e9" font-weight="bold" font-family="Arial">70°</text>
+    <path d="M60 180 Q60 165 75 165 L95 165 L95 145 Q95 135 105 135 Q115 135 115 145 L115 165 L120 165 L120 140 Q120 130 130 130 Q140 130 140 140 L140 165 L145 165 L145 145 Q145 135 155 135 Q165 135 165 145 L165 180 Q165 210 130 210 Q95 210 60 180 Z" fill="#ffffff" opacity="0.9"/>
+  </svg>
+`);
+
+const SVG_DIAGNOSTIC = svgEncode(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+    <defs><linearGradient id="d" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient></defs>
+    <rect width="400" height="300" fill="url(#d)"/>
+    <circle cx="60" cy="50" r="90" fill="#ffffff" opacity="0.08"/>
+    <circle cx="350" cy="260" r="110" fill="#ffffff" opacity="0.06"/>
+    <path d="M150 80 Q150 130 180 130 Q210 130 210 100" stroke="#ffffff" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M230 80 Q230 130 200 130" stroke="#ffffff" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <circle cx="190" cy="200" r="45" fill="#ffffff" opacity="0.95"/>
+    <circle cx="190" cy="200" r="30" fill="#6366f1"/>
+    <circle cx="190" cy="200" r="15" fill="#ffffff"/>
+    <path d="M190 155 Q190 130 210 130" stroke="#ffffff" stroke-width="5" fill="none"/>
+    <path d="M190 245 Q190 260 220 260 L260 260" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <rect x="290" y="80" width="20" height="120" rx="10" fill="#ffffff" opacity="0.95"/>
+    <circle cx="300" cy="215" r="20" fill="#ffffff" opacity="0.95"/>
+    <circle cx="300" cy="215" r="12" fill="#ef4444"/>
+    <rect x="297" y="90" width="6" height="110" fill="#ef4444"/>
+    <line x1="295" y1="110" x2="305" y2="110" stroke="#6366f1" stroke-width="2"/>
+    <line x1="295" y1="130" x2="305" y2="130" stroke="#6366f1" stroke-width="2"/>
+    <line x1="295" y1="150" x2="305" y2="150" stroke="#6366f1" stroke-width="2"/>
+    <line x1="295" y1="170" x2="305" y2="170" stroke="#6366f1" stroke-width="2"/>
+  </svg>
+`);
+
+const SVG_MATERIEL = svgEncode(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+    <defs><linearGradient id="m" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient></defs>
+    <rect width="400" height="300" fill="url(#m)"/>
+    <circle cx="340" cy="60" r="90" fill="#ffffff" opacity="0.08"/>
+    <circle cx="50" cy="250" r="100" fill="#ffffff" opacity="0.06"/>
+    <circle cx="140" cy="220" r="35" fill="none" stroke="#ffffff" stroke-width="6"/>
+    <circle cx="140" cy="220" r="6" fill="#ffffff"/>
+    <circle cx="90" cy="240" r="15" fill="none" stroke="#ffffff" stroke-width="5"/>
+    <circle cx="90" cy="240" r="4" fill="#ffffff"/>
+    <path d="M105 220 L170 220 L170 130 L140 130" stroke="#ffffff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M170 130 L230 130 L230 100" stroke="#ffffff" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M110 130 L140 130" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <path d="M110 130 L110 190" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <rect x="280" y="100" width="60" height="60" rx="12" fill="#ffffff" opacity="0.95"/>
+    <rect x="300" y="110" width="20" height="40" fill="#10b981"/>
+    <rect x="290" y="120" width="40" height="20" fill="#10b981"/>
+    <circle cx="310" cy="215" r="30" fill="#ffffff" opacity="0.9"/>
+    <circle cx="310" cy="215" r="18" fill="#10b981"/>
+    <circle cx="310" cy="215" r="8" fill="#ffffff"/>
+  </svg>
+`);
+
+const SVG_INJECTION = svgEncode(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+    <defs><linearGradient id="i" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f43f5e"/><stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient></defs>
+    <rect width="400" height="300" fill="url(#i)"/>
+    <circle cx="60" cy="60" r="90" fill="#ffffff" opacity="0.08"/>
+    <circle cx="350" cy="250" r="100" fill="#ffffff" opacity="0.06"/>
+    <rect x="70" y="130" width="180" height="50" rx="6" fill="#ffffff" opacity="0.95"/>
+    <rect x="60" y="120" width="20" height="70" rx="4" fill="#ffffff" opacity="0.95"/>
+    <rect x="250" y="140" width="60" height="30" rx="3" fill="#ffffff" opacity="0.95"/>
+    <rect x="310" y="148" width="60" height="6" fill="#ffffff" opacity="0.95"/>
+    <line x1="100" y1="130" x2="100" y2="180" stroke="#f43f5e" stroke-width="2"/>
+    <line x1="130" y1="130" x2="130" y2="180" stroke="#f43f5e" stroke-width="2"/>
+    <line x1="160" y1="130" x2="160" y2="180" stroke="#f43f5e" stroke-width="2"/>
+    <line x1="190" y1="130" x2="190" y2="180" stroke="#f43f5e" stroke-width="2"/>
+    <rect x="70" y="130" width="90" height="50" fill="#f43f5e" opacity="0.5"/>
+    <rect x="180" y="180" width="90" height="90" rx="8" fill="#ffffff" opacity="0.9"/>
+    <path d="M200 190 Q225 210 250 190" stroke="#f43f5e" stroke-width="2" fill="none"/>
+    <circle cx="225" cy="240" r="8" fill="#f43f5e" opacity="0.5"/>
+    <path d="M225 270 L225 290" stroke="#ffffff" stroke-width="3"/>
+  </svg>
+`);
+
+const SVG_SOINS = svgEncode(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+    <defs><linearGradient id="s" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#f97316"/>
+    </linearGradient></defs>
+    <rect width="400" height="300" fill="url(#s)"/>
+    <circle cx="340" cy="60" r="90" fill="#ffffff" opacity="0.08"/>
+    <circle cx="60" cy="250" r="100" fill="#ffffff" opacity="0.06"/>
+    <rect x="100" y="110" width="200" height="60" rx="30" fill="#ffffff" opacity="0.95" transform="rotate(-25 200 140)"/>
+    <rect x="100" y="110" width="200" height="60" rx="30" fill="#ffffff" opacity="0.95" transform="rotate(25 200 140)"/>
+    <circle cx="200" cy="140" r="28" fill="#f59e0b" opacity="0.3"/>
+    <circle cx="200" cy="140" r="18" fill="#f59e0b" opacity="0.5"/>
+    <circle cx="140" cy="120" r="3" fill="#f59e0b"/>
+    <circle cx="160" cy="110" r="3" fill="#f59e0b"/>
+    <circle cx="240" cy="170" r="3" fill="#f59e0b"/>
+    <circle cx="260" cy="160" r="3" fill="#f59e0b"/>
+    <path d="M100 220 L140 250 M140 220 L100 250" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="95" cy="215" r="10" fill="none" stroke="#ffffff" stroke-width="4"/>
+    <circle cx="95" cy="255" r="10" fill="none" stroke="#ffffff" stroke-width="4"/>
+    <path d="M200 230 Q230 220 250 240 Q270 260 300 240 Q320 220 340 240" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </svg>
+`);
+
+const SVG_BEBE = svgEncode(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+    <defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d946ef"/><stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient></defs>
+    <rect width="400" height="300" fill="url(#b)"/>
+    <circle cx="50" cy="60" r="90" fill="#ffffff" opacity="0.08"/>
+    <circle cx="350" cy="250" r="100" fill="#ffffff" opacity="0.06"/>
+    <rect x="120" y="120" width="70" height="130" rx="12" fill="#ffffff" opacity="0.95"/>
+    <rect x="135" y="90" width="40" height="35" rx="6" fill="#ffffff" opacity="0.95"/>
+    <ellipse cx="155" cy="90" rx="20" ry="8" fill="#d946ef" opacity="0.6"/>
+    <ellipse cx="155" cy="90" rx="8" ry="4" fill="#ffffff"/>
+    <line x1="120" y1="150" x2="190" y2="150" stroke="#d946ef" stroke-width="2"/>
+    <line x1="120" y1="180" x2="190" y2="180" stroke="#d946ef" stroke-width="2"/>
+    <line x1="120" y1="210" x2="190" y2="210" stroke="#d946ef" stroke-width="2"/>
+    <rect x="120" y="180" width="70" height="70" fill="#fce7f3" opacity="0.7"/>
+    <circle cx="280" cy="180" r="35" fill="#ffffff" opacity="0.95"/>
+    <circle cx="280" cy="180" r="20" fill="#ec4899" opacity="0.6"/>
+    <circle cx="280" cy="180" r="8" fill="#ffffff"/>
+    <path d="M295 200 Q310 220 320 210 Q330 200 320 190" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M250 90 Q250 75 265 75 Q280 75 280 90 Q280 105 265 120 Q250 105 250 90 Z" fill="#ffffff" opacity="0.9"/>
+  </svg>
+`);
+
+const SVG_BIENETRE = svgEncode(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+    <defs><linearGradient id="w" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#84cc16"/><stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient></defs>
+    <rect width="400" height="300" fill="url(#w)"/>
+    <circle cx="340" cy="50" r="90" fill="#ffffff" opacity="0.08"/>
+    <circle cx="50" cy="260" r="100" fill="#ffffff" opacity="0.06"/>
+    <path d="M200 220 Q200 180 160 160 Q120 140 120 180 Q120 220 200 260 Q280 220 280 180 Q280 140 240 160 Q200 180 200 220 Z" fill="#ffffff" opacity="0.95"/>
+    <path d="M90 190 L140 190 L155 165 L175 220 L195 180 L215 205 L235 190 L310 190" stroke="#84cc16" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M310 100 Q340 70 360 100 Q340 130 310 100 Z" fill="#ffffff" opacity="0.9"/>
+    <path d="M310 100 Q335 90 355 100" stroke="#84cc16" stroke-width="2" fill="none"/>
+    <ellipse cx="100" cy="90" rx="30" ry="14" fill="#ffffff" opacity="0.95" transform="rotate(-30 100 90)"/>
+    <ellipse cx="100" cy="90" rx="30" ry="14" fill="#22c55e" opacity="0.4" transform="rotate(-30 100 90)"/>
+  </svg>
+`);
+
 /* ============ DATA ============ */
 const CATEGORIES = [
-  {
-    id:'hygiene', name:'Hygiène & Protection', icon:'🧼',
-    color:'from-sky-500 to-cyan-500', desc:'Gants, masques, gels, désinfectants',
-    img:'https://images.unsplash.com/photo-1584483766114-2cea6facdf57?w=800&q=80'
-  },
-  {
-    id:'diagnostic', name:'Diagnostic Médical', icon:'🩺',
-    color:'from-indigo-500 to-blue-500', desc:'Tensiomètres, thermomètres, stéthoscopes',
-    img:'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80'
-  },
-  {
-    id:'materiel', name:'Matériel Médical', icon:'🏥',
-    color:'from-emerald-500 to-teal-500', desc:'Lits, fauteuils, équipements cliniques',
-    img:'https://images.unsplash.com/photo-1583324113626-70df0f4deaab?w=800&q=80'
-  },
-  {
-    id:'injection', name:'Injection & Drainage', icon:'💉',
-    color:'from-rose-500 to-pink-500', desc:'Seringues, cathéters, perfusions',
-    img:'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80'
-  },
-  {
-    id:'soins', name:'Soins & Sutures', icon:'🩹',
-    color:'from-amber-500 to-orange-500', desc:'Pansements, fils, compresses stériles',
-    img:'https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80'
-  },
-  {
-    id:'bebe', name:'Bébés & Mamans', icon:'👶',
-    color:'from-fuchsia-500 to-pink-500', desc:'Couveuses, tire-lait, accessoires',
-    img:'https://images.unsplash.com/photo-1519689680058-324335c77eba?w=800&q=80'
-  },
-  {
-    id:'bienetre', name:'Santé & Bien-être', icon:'💚',
-    color:'from-lime-500 to-green-500', desc:'Compléments, tensiomètres, oxymètres',
-    img:'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80'
-  },
+  { id:'hygiene',    name:'Hygiène & Protection', icon:'🧼', color:'from-sky-500 to-cyan-500',     desc:'Gants, masques, gels, désinfectants',      img: SVG_HYGIENE },
+  { id:'diagnostic', name:'Diagnostic Médical',   icon:'🩺', color:'from-indigo-500 to-blue-500',  desc:'Tensiomètres, thermomètres, stéthoscopes', img: SVG_DIAGNOSTIC },
+  { id:'materiel',   name:'Matériel Médical',     icon:'🏥', color:'from-emerald-500 to-teal-500', desc:'Lits, fauteuils, équipements cliniques',   img: SVG_MATERIEL },
+  { id:'injection',  name:'Injection & Drainage', icon:'💉', color:'from-rose-500 to-pink-500',    desc:'Seringues, cathéters, perfusions',         img: SVG_INJECTION },
+  { id:'soins',      name:'Soins & Sutures',      icon:'🩹', color:'from-amber-500 to-orange-500', desc:'Pansements, fils, compresses stériles',    img: SVG_SOINS },
+  { id:'bebe',       name:'Bébés & Mamans',       icon:'👶', color:'from-fuchsia-500 to-pink-500', desc:'Couveuses, tire-lait, accessoires',        img: SVG_BEBE },
+  { id:'bienetre',   name:'Santé & Bien-être',    icon:'💚', color:'from-lime-500 to-green-500',   desc:'Compléments, tensiomètres, oxymètres',     img: SVG_BIENETRE },
 ];
 
 const PRODUCTS = [
   { id:1,  name:'Tensiomètre électronique bras',  cat:'diagnostic', price:349, old:499, badge:'-30%',
-    desc:'Tensiomètre automatique de bras avec écran LCD rétroéclairé. Mesure précise de la tension artérielle et du pouls. Mémoire 2x90 mesures, détection d\'arythmie, brassard 22-42cm. Certifié CE.',
+    desc:'Tensiomètre automatique de bras avec écran LCD rétroéclairé. Mémoire 2x90 mesures, détection d\'arythmie, brassard 22-42cm. Certifié CE.',
     img:'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80' },
   { id:2,  name:'Thermomètre infrarouge frontal', cat:'diagnostic', price:199, old:279, badge:'-28%',
-    desc:'Thermomètre frontal sans contact infrarouge. Mesure en 1 seconde, précision ±0.2°C. Alarme fièvre, écran LCD, mémoire 32 mesures. Idéal pour bébés, enfants et adultes.',
+    desc:'Thermomètre frontal sans contact infrarouge. Mesure en 1 seconde, précision ±0.2°C. Alarme fièvre, écran LCD, mémoire 32 mesures.',
     img:'https://images.unsplash.com/photo-1584362917165-526a968579e8?w=800&q=80' },
   { id:3,  name:'Stéthoscope professionnel',      cat:'diagnostic', price:249, old:null, badge:null,
-    desc:'Stéthoscope double pavillon en acier inoxydable. Tube en PVC sans latex, embouts souples. Excellente acoustique pour usage cardiologique et généraliste.',
+    desc:'Stéthoscope double pavillon en acier inoxydable. Tube en PVC sans latex, embouts souples. Excellente acoustique.',
     img:'https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=800&q=80' },
   { id:4,  name:'Gants nitrile (boîte 100)',      cat:'hygiene',    price:89,  old:120, badge:'-25%',
-    desc:'Boîte de 100 gants nitrile non poudrés, taille M. Résistants aux produits chimiques, hypoallergéniques. Idéal pour examens médicaux et soins.',
+    desc:'Boîte de 100 gants nitrile non poudrés, taille M. Résistants aux produits chimiques, hypoallergéniques.',
     img:'https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=800&q=80' },
   { id:5,  name:'Masques chirurgicaux (50pcs)',   cat:'hygiene',    price:49,  old:79,  badge:'-38%',
-    desc:'Masques chirurgicaux 3 plis, filtration ≥98%. Boîte de 50 pièces. Élastiques doux, barrette nasale ajustable. Certifiés CE, usage médical.',
+    desc:'Masques chirurgicaux 3 plis, filtration ≥98%. Boîte de 50 pièces. Certifiés CE, usage médical.',
     img:'https://images.unsplash.com/photo-1584634731339-252c581abfc5?w=800&q=80' },
   { id:6,  name:'Gel hydroalcoolique 500ml',      cat:'hygiene',    price:39,  old:null, badge:null,
-    desc:'Gel hydroalcoolique désinfectant 70°. Élimine 99.9% des bactéries et virus. Avec glycérine hydratante, ne dessèche pas la peau. Flacon pompe 500ml.',
+    desc:'Gel hydroalcoolique désinfectant 70°. Élimine 99.9% des bactéries et virus. Flacon pompe 500ml.',
     img:'https://images.unsplash.com/photo-1584483766114-2cea6facdf57?w=800&q=80' },
   { id:7,  name:'Oxymètre de pouls digital',      cat:'bienetre',   price:159, old:229, badge:'-30%',
-    desc:'Oxymètre de pouls digital pour mesurer SpO2 et fréquence cardiaque. Écran OLED, alarme, arrêt automatique. Pince à doigt confortable. Piles incluses.',
+    desc:'Oxymètre de pouls digital pour mesurer SpO2 et fréquence cardiaque. Écran OLED, alarme, arrêt automatique.',
     img:'https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=800&q=80' },
   { id:8,  name:'Seringues 5ml (100 unités)',     cat:'injection',  price:69,  old:null, badge:null,
-    desc:'Boîte de 100 seringues 5ml stériles à usage unique. Aiguille 21G, embout Luer. Emballage individuel stérile. Certifiées CE / ISO 13485.',
+    desc:'Boîte de 100 seringues 5ml stériles à usage unique. Aiguille 21G, embout Luer. Emballage stérile individuel.',
     img:'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80' },
   { id:9,  name:'Perfusion intraveineuse set',    cat:'injection',  price:119, old:null, badge:'Nouveau',
-    desc:'Kit de perfusion intraveineuse stérile. Chambre compte-gouttes, régulateur de débit, filtre 15µ. Tubulure 150cm, aiguille 21G. Emballage individuel.',
+    desc:'Kit de perfusion intraveineuse stérile. Chambre compte-gouttes, régulateur de débit, filtre 15µ. Tubulure 150cm.',
     img:'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&q=80' },
   { id:10, name:'Compresses stériles (100pcs)',   cat:'soins',      price:59,  old:89,  badge:'-33%',
-    desc:'Compresses de gaze stériles 5x5cm, boîte de 100. Coton hydrophile, très absorbantes. Emballage individuel stérile. Usage médical et soins.',
+    desc:'Compresses de gaze stériles 5x5cm, boîte de 100. Coton hydrophile, très absorbantes. Emballage individuel stérile.',
     img:'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=800&q=80' },
   { id:11, name:'Pansements assortis (kit)',      cat:'soins',      price:45,  old:null, badge:null,
-    desc:'Kit de pansements assortis de différentes tailles. Boîte de 100 unités. Hypoallergéniques, imperméables, longue tenue. Pour petites blessures.',
+    desc:'Kit de pansements assortis de différentes tailles. Boîte de 100 unités. Hypoallergéniques, imperméables.',
     img:'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=800&q=80' },
   { id:12, name:'Tire-lait électrique',           cat:'bebe',       price:599, old:799, badge:'-25%',
-    desc:'Tire-lait électrique double pompage. 2 phases (stimulation + expression), 9 niveaux d\'aspiration. Silencieux, avec biberons 150ml et téterelles 24/27mm.',
+    desc:'Tire-lait électrique double pompage. 2 phases, 9 niveaux d\'aspiration. Silencieux, biberons 150ml inclus.',
     img:'https://images.unsplash.com/photo-1519689680058-324335c77eba?w=800&q=80' },
   { id:13, name:'Nébuliseur pour bébé',           cat:'bebe',       price:329, old:null, badge:null,
-    desc:'Nébuliseur à compresseur pour bébé et enfant. Masque buccal et nasal, embouts adulte et enfant. Particules fines ≤5µm. Très silencieux (<55dB).',
+    desc:'Nébuliseur à compresseur pour bébé et enfant. Masque buccal et nasal, embouts adulte et enfant. Très silencieux.',
     img:'https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80' },
   { id:14, name:'Fauteuil roulant pliable',       cat:'materiel',   price:1890,old:2490,badge:'-24%',
-    desc:'Fauteuil roulant pliable en aluminium, 12kg. Supporte jusqu\'à 120kg. Roues 24" avec freins, accoudoirs escamotables, repose-pieds amovibles. Livré plié.',
+    desc:'Fauteuil roulant pliable en aluminium, 12kg. Supporte jusqu\'à 120kg. Roues 24" avec freins, accoudoirs escamotables.',
     img:'https://images.unsplash.com/photo-1583324113626-70df0f4deaab?w=800&q=80' },
   { id:15, name:'Béquilles réglables (paire)',    cat:'materiel',   price:299, old:null, badge:null,
-    desc:'Paire de béquilles axillaires réglables en aluminium. Hauteur réglable, embouts antidérapants, poignées ergonomiques. Supporte jusqu\'à 130kg.',
+    desc:'Paire de béquilles axillaires réglables en aluminium. Hauteur réglable, embouts antidérapants.',
     img:'https://images.unsplash.com/photo-1580281658626-ee379f3cce93?w=800&q=80' },
   { id:16, name:'Bande de gaze élastique',        cat:'soins',      price:29,  old:null, badge:null,
-    desc:'Bande de gaze élastique 10cm x 4m. Coton extensible, très absorbante. Pour fixation de pansements et soutien. Lavable et réutilisable.',
+    desc:'Bande de gaze élastique 10cm x 4m. Coton extensible, très absorbante. Lavable et réutilisable.',
     img:'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=800&q=80' },
 ];
 
@@ -567,8 +705,7 @@ CATEGORIES.forEach((c, i) => {
     <div class="relative aspect-[4/3] overflow-hidden">
       <img src="${c.img}" alt="${c.name}" loading="lazy"
            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>
-      <div class="absolute inset-0 bg-gradient-to-t ${c.color} opacity-70 group-hover:opacity-90 transition-opacity duration-300 mix-blend-multiply"></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-t ${c.color} opacity-0 group-hover:opacity-30 transition-opacity duration-300 mix-blend-multiply"></div>
       <div class="absolute top-3 right-3 w-10 h-10 rounded-xl bg-white/95 backdrop-blur shadow-lg flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
         ${c.icon}
       </div>
