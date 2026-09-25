@@ -73,7 +73,6 @@
 <header class="sticky top-0 z-40 glass border-b border-slate-200/70">
   <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
 
-    <!-- LOGO sans croix -->
     <a href="#" class="flex items-center gap-3 shrink-0 group">
       <svg class="w-11 h-11 group-hover:scale-105 transition-transform drop-shadow-sm" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -95,14 +94,12 @@
       </div>
     </a>
 
-    <!-- SEARCH -->
     <div class="hidden lg:flex flex-1 max-w-xl relative">
       <input id="searchInput" type="text" placeholder="Rechercher un produit, une catégorie..."
         class="w-full pl-11 pr-4 py-2.5 rounded-full border border-slate-200 bg-white/70 focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition text-sm"/>
       <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
     </div>
 
-    <!-- ACTIONS -->
     <div class="flex items-center gap-1.5">
       <button class="hidden md:flex items-center gap-2 px-3 py-2 rounded-full hover:bg-brand-50 text-slate-700 text-sm font-medium transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
@@ -119,7 +116,6 @@
     </div>
   </div>
 
-  <!-- NAV -->
   <nav class="hidden lg:block border-t border-slate-200/70">
     <div class="max-w-7xl mx-auto px-4 flex items-center gap-1 text-sm font-medium">
       <a href="#" class="px-4 py-3 text-brand-700 border-b-2 border-brand-600 font-semibold">Accueil</a>
@@ -177,7 +173,6 @@
       </div>
     </div>
 
-    <!-- HERO VISUAL -->
     <div class="relative fade-up">
       <div class="relative rounded-3xl overflow-hidden shadow-2xl shadow-brand-900/20 border-4 border-white aspect-[4/3]">
         <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=900&q=80" alt="Matériel médical" class="w-full h-full object-cover"/>
@@ -206,7 +201,6 @@
     </div>
   </div>
 
-  <!-- Mini gallery strip -->
   <div class="relative max-w-7xl mx-auto px-4 pb-10 -mt-2 hidden md:block">
     <div class="grid grid-cols-4 gap-3">
       <div class="rounded-xl overflow-hidden h-20 shadow-md border-2 border-white"><img src="https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=400&q=80" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"/></div>
@@ -474,7 +468,7 @@ const CATEGORIES = [
   {
     id:'diagnostic', name:'Diagnostic Médical', icon:'🩺',
     color:'from-indigo-500 to-blue-500', desc:'Tensiomètres, thermomètres, stéthoscopes',
-    img:'https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=800&q=80'
+    img:'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80'
   },
   {
     id:'materiel', name:'Matériel Médical', icon:'🏥',
@@ -489,7 +483,7 @@ const CATEGORIES = [
   {
     id:'soins', name:'Soins & Sutures', icon:'🩹',
     color:'from-amber-500 to-orange-500', desc:'Pansements, fils, compresses stériles',
-    img:'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=800&q=80'
+    img:'https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80'
   },
   {
     id:'bebe', name:'Bébés & Mamans', icon:'👶',
@@ -499,7 +493,7 @@ const CATEGORIES = [
   {
     id:'bienetre', name:'Santé & Bien-être', icon:'💚',
     color:'from-lime-500 to-green-500', desc:'Compléments, tensiomètres, oxymètres',
-    img:'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80'
+    img:'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80'
   },
 ];
 
@@ -561,7 +555,7 @@ let searchQ = '';
 let currentProduct = null;
 let modalQty = 1;
 
-/* ============ RENDER CATEGORIES (avec images) ============ */
+/* ============ RENDER CATEGORIES ============ */
 const catGrid = document.getElementById('catGrid');
 CATEGORIES.forEach((c, i) => {
   const el = document.createElement('a');
