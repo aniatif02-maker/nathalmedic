@@ -48,7 +48,6 @@
   .modal-in { animation: modalIn .3s cubic-bezier(.2,.8,.3,1) forwards; }
   @keyframes modalIn { from{opacity:0; transform: scale(.95) translateY(20px)} to{opacity:1; transform:none} }
   .line-clamp-2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-  .line-clamp-3 { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
 </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
@@ -74,7 +73,7 @@
 <header class="sticky top-0 z-40 glass border-b border-slate-200/70">
   <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
 
-    <!-- LOGO (sans croix) -->
+    <!-- LOGO sans croix -->
     <a href="#" class="flex items-center gap-3 shrink-0 group">
       <svg class="w-11 h-11 group-hover:scale-105 transition-transform drop-shadow-sm" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -85,9 +84,7 @@
         </defs>
         <path d="M24 2.5 L42.5 13 V35 L24 45.5 L5.5 35 V13 Z" fill="url(#lgHeader)"/>
         <path d="M24 2.5 L42.5 13 V35 L24 45.5 L5.5 35 V13 Z" fill="none" stroke="#ffffff" stroke-opacity=".2" stroke-width="1"/>
-        <!-- N letter -->
         <path d="M15 16 V32 M15 16 L23 32 M23 16 V32" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <!-- pulse -->
         <path d="M26 24 H29 L31 19 L34 29 L36 24 H41" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".95"/>
       </svg>
       <div class="leading-tight">
@@ -180,25 +177,21 @@
       </div>
     </div>
 
-    <!-- HERO VISUAL: IMAGE COLLAGE -->
+    <!-- HERO VISUAL -->
     <div class="relative fade-up">
-      <!-- Main image -->
       <div class="relative rounded-3xl overflow-hidden shadow-2xl shadow-brand-900/20 border-4 border-white aspect-[4/3]">
         <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=900&q=80" alt="Matériel médical" class="w-full h-full object-cover"/>
         <div class="absolute inset-0 bg-gradient-to-tr from-brand-900/40 via-transparent to-transparent"></div>
       </div>
 
-      <!-- Floating image 1 -->
       <div class="hidden md:block float absolute -bottom-8 -left-8 w-40 h-40 rounded-2xl overflow-hidden shadow-2xl shadow-brand-900/30 border-4 border-white rotate-[-6deg]">
         <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=80" alt="Diagnostic" class="w-full h-full object-cover"/>
       </div>
 
-      <!-- Floating image 2 -->
       <div class="hidden md:block float-slow absolute -top-6 -right-6 w-36 h-36 rounded-2xl overflow-hidden shadow-2xl shadow-brand-900/30 border-4 border-white rotate-[8deg]">
         <img src="https://images.unsplash.com/photo-1584362917165-526a968579e8?w=400&q=80" alt="Thermomètre" class="w-full h-full object-cover"/>
       </div>
 
-      <!-- Floating badge: Paiement -->
       <div class="absolute top-4 left-4 bg-white/95 backdrop-blur rounded-2xl shadow-xl border border-slate-100 px-4 py-3 flex items-center gap-3">
         <div class="w-10 h-10 rounded-full bg-mint-100 flex items-center justify-center">
           <svg class="w-5 h-5 text-mint-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
@@ -206,7 +199,6 @@
         <div><div class="font-bold text-sm text-slate-800">Paiement</div><div class="text-[11px] text-slate-500">à la livraison</div></div>
       </div>
 
-      <!-- Floating badge: Certifié -->
       <div class="absolute bottom-4 right-4 bg-gradient-to-r from-brand-600 to-mint-600 text-white rounded-2xl shadow-xl px-4 py-3 flex items-center gap-3">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M12 3l2.09 1.5L16.5 4l1.5 2.09L20.09 7l-.5 2.59L21 12l-1.5 2.09.5 2.59-2.09 1.41L16.5 21l-2.41-.5L12 22l-2.09-1.5L7.5 21l-1.5-2.09L3.91 17.5 4.41 15 3 12l1.5-2.09L4.41 7.5 6 6.09 7.5 4l2.41.5L12 3z"/></svg>
         <div><div class="font-bold text-sm">Certifié CE</div><div class="text-[11px] text-white/80">Normes ISO</div></div>
@@ -385,12 +377,10 @@
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
     <div class="grid md:grid-cols-2 gap-0">
-      <!-- Image -->
       <div class="relative bg-slate-100 aspect-square md:aspect-auto md:min-h-[500px] rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none overflow-hidden">
         <img id="pmImage" src="" alt="" class="w-full h-full object-cover"/>
         <div id="pmBadge" class="hidden absolute top-4 left-4 px-3 py-1.5 rounded-full text-xs font-bold text-white shadow-lg"></div>
       </div>
-      <!-- Info -->
       <div class="p-6 md:p-8 flex flex-col">
         <div id="pmCat" class="text-xs uppercase tracking-widest text-brand-600 font-bold mb-2"></div>
         <h2 id="pmName" class="text-2xl md:text-3xl font-extrabold leading-tight mb-3"></h2>
@@ -412,7 +402,6 @@
 
         <p id="pmDesc" class="text-slate-600 text-sm leading-relaxed mb-6"></p>
 
-        <!-- Quantity selector -->
         <div class="mb-6">
           <label class="block text-sm font-semibold text-slate-700 mb-2">Quantité</label>
           <div class="flex items-center gap-3">
@@ -436,7 +425,7 @@
           </a>
         </div>
 
-        <div class="mt-5 flex items-center gap-4 text-xs text-slate-500">
+        <div class="mt-5 flex items-center gap-4 text-xs text-slate-500 flex-wrap">
           <span class="flex items-center gap-1"><svg class="w-4 h-4 text-mint-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>En stock</span>
           <span class="flex items-center gap-1"><svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Livraison 24-48h</span>
           <span class="flex items-center gap-1"><svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Paiement livraison</span>
@@ -477,13 +466,41 @@
 <script>
 /* ============ DATA ============ */
 const CATEGORIES = [
-  { id:'hygiene',   name:'Hygiène & Protection', icon:'🧼', color:'from-sky-500 to-cyan-500',     desc:'Gants, masques, gels, désinfectants' },
-  { id:'diagnostic',name:'Diagnostic Médical',   icon:'🩺', color:'from-indigo-500 to-blue-500',  desc:'Tensiomètres, thermomètres, stéthoscopes' },
-  { id:'materiel',  name:'Matériel Médical',     icon:'🏥', color:'from-emerald-500 to-teal-500', desc:'Lits, fauteuils, équipements cliniques' },
-  { id:'injection', name:'Injection & Drainage', icon:'💉', color:'from-rose-500 to-pink-500',    desc:'Seringues, cathéters, perfusions' },
-  { id:'soins',     name:'Soins & Sutures',      icon:'🩹', color:'from-amber-500 to-orange-500', desc:'Pansements, fils, compresses stériles' },
-  { id:'bebe',      name:'Bébés & Mamans',       icon:'👶', color:'from-fuchsia-500 to-pink-500', desc:'Couveuses, tire-lait, accessoires' },
-  { id:'bienetre',  name:'Santé & Bien-être',    icon:'💚', color:'from-lime-500 to-green-500',   desc:'Compléments, tensiomètres, oxymètres' },
+  {
+    id:'hygiene', name:'Hygiène & Protection', icon:'🧼',
+    color:'from-sky-500 to-cyan-500', desc:'Gants, masques, gels, désinfectants',
+    img:'https://images.unsplash.com/photo-1584483766114-2cea6facdf57?w=800&q=80'
+  },
+  {
+    id:'diagnostic', name:'Diagnostic Médical', icon:'🩺',
+    color:'from-indigo-500 to-blue-500', desc:'Tensiomètres, thermomètres, stéthoscopes',
+    img:'https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=800&q=80'
+  },
+  {
+    id:'materiel', name:'Matériel Médical', icon:'🏥',
+    color:'from-emerald-500 to-teal-500', desc:'Lits, fauteuils, équipements cliniques',
+    img:'https://images.unsplash.com/photo-1583324113626-70df0f4deaab?w=800&q=80'
+  },
+  {
+    id:'injection', name:'Injection & Drainage', icon:'💉',
+    color:'from-rose-500 to-pink-500', desc:'Seringues, cathéters, perfusions',
+    img:'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80'
+  },
+  {
+    id:'soins', name:'Soins & Sutures', icon:'🩹',
+    color:'from-amber-500 to-orange-500', desc:'Pansements, fils, compresses stériles',
+    img:'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=800&q=80'
+  },
+  {
+    id:'bebe', name:'Bébés & Mamans', icon:'👶',
+    color:'from-fuchsia-500 to-pink-500', desc:'Couveuses, tire-lait, accessoires',
+    img:'https://images.unsplash.com/photo-1519689680058-324335c77eba?w=800&q=80'
+  },
+  {
+    id:'bienetre', name:'Santé & Bien-être', icon:'💚',
+    color:'from-lime-500 to-green-500', desc:'Compléments, tensiomètres, oxymètres',
+    img:'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80'
+  },
 ];
 
 const PRODUCTS = [
@@ -544,25 +561,30 @@ let searchQ = '';
 let currentProduct = null;
 let modalQty = 1;
 
-/* ============ RENDER CATEGORIES ============ */
+/* ============ RENDER CATEGORIES (avec images) ============ */
 const catGrid = document.getElementById('catGrid');
 CATEGORIES.forEach((c, i) => {
   const el = document.createElement('a');
   el.href = '#products';
   el.onclick = () => filterCat(c.id);
-  el.className = 'fade-up card-hover group relative overflow-hidden rounded-2xl bg-white border border-slate-100 p-5 md:p-6 shadow-sm';
+  el.className = 'fade-up card-hover group relative overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-sm flex flex-col';
   el.style.transitionDelay = (i*60)+'ms';
   el.innerHTML = `
-    <div class="absolute inset-0 bg-gradient-to-br ${c.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-    <div class="relative">
-      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${c.color} flex items-center justify-center text-2xl mb-4 group-hover:bg-white/20 transition">
+    <div class="relative aspect-[4/3] overflow-hidden">
+      <img src="${c.img}" alt="${c.name}" loading="lazy"
+           class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>
+      <div class="absolute inset-0 bg-gradient-to-t ${c.color} opacity-70 group-hover:opacity-90 transition-opacity duration-300 mix-blend-multiply"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent"></div>
+      <div class="absolute top-3 right-3 w-10 h-10 rounded-xl bg-white/95 backdrop-blur shadow-lg flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
         ${c.icon}
       </div>
-      <h3 class="font-bold text-base md:text-lg group-hover:text-white transition">${c.name}</h3>
-      <p class="text-xs md:text-sm text-slate-500 mt-1 group-hover:text-white/85 transition">${c.desc}</p>
-      <div class="mt-4 flex items-center gap-1 text-xs font-semibold text-brand-600 group-hover:text-white transition">
+    </div>
+    <div class="p-5 flex flex-col flex-1">
+      <h3 class="font-bold text-base md:text-lg text-slate-900 group-hover:text-brand-700 transition">${c.name}</h3>
+      <p class="text-xs md:text-sm text-slate-500 mt-1.5 line-clamp-2">${c.desc}</p>
+      <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-1 text-xs font-semibold text-brand-600 group-hover:gap-2 transition-all">
         Voir les produits
-        <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
       </div>
     </div>`;
   catGrid.appendChild(el);
@@ -676,8 +698,7 @@ function openModal(id) {
 
   updateWhatsLink();
 
-  const modal = document.getElementById('productModal');
-  modal.classList.remove('hidden');
+  document.getElementById('productModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
 
