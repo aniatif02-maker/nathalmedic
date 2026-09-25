@@ -4,12 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
 <title>NathalMedic — Matériel Médical au Maroc | Livraison Rapide</title>
-
-<!-- FAVICON -->
 <link rel="icon" type="image/png" href="https://i.postimg.cc/g2FNShN1/logo.png">
 <link rel="shortcut icon" type="image/png" href="https://i.postimg.cc/g2FNShN1/logo.png">
 <link rel="apple-touch-icon" href="https://i.postimg.cc/g2FNShN1/logo.png">
-
 <meta name="description" content="NathalMedic : Vente en ligne de matériel médical et soins au Maroc. Paiement à la livraison. Livraison gratuite dès 500 DH." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -522,24 +519,16 @@
 <script>
 const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyX9cHzd7-jDiEfa5tGgl-6snU-74Dy7dHEHfMdTgelJvNepINBwGBsKBxMnnOKhcE/exec";
 
-/* ============ CATEGORIES (nouvelles images Unsplash) ============ */
+/* ============ CATEGORIES — utilisez vos images locales ============ */
 const CATEGORIES = [
-  { id:'hygiene',    name:'Hygiène & Protection',        icon:'🧼', desc:'Gants, masques, gels, désinfectants',
-    img:'https://images.unsplash.com/photo-1584483766114-2cea6facdf57?w=800&q=80' },
-  { id:'diagnostic', name:'Diagnostic Médical',          icon:'🩺', desc:'Tensiomètres, thermomètres, stéthoscopes',
-    img:'https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=800&q=80' },
-  { id:'materiel',   name:'Matériel Médical',            icon:'🏥', desc:'Lits, fauteuils, équipements cliniques',
-    img:'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80' },
-  { id:'injection',  name:'Injection & Drainage',        icon:'💉', desc:'Seringues, cathéters, perfusions',
-    img:'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80' },
-  { id:'soins',      name:'Soins & Sutures',             icon:'🩹', desc:'Pansements, fils, compresses stériles',
-    img:'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=800&q=80' },
-  { id:'bebe',       name:'Bébés & Mamans',              icon:'👶', desc:'Couches, lait, tire-lait, accessoires',
-    img:'https://images.unsplash.com/photo-1519689680058-324335c77eba?w=800&q=80' },
-  { id:'bienetre',   name:'Santé & Bien-être',           icon:'💚', desc:'Compléments, tensiomètres, oxymètres',
-    img:'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80' },
-  { id:'beaute',     name:'Soins Peau, Cheveux & Corps', icon:'✨', desc:'Crèmes, sérums, huiles, soins du corps',
-    img:'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&q=80' }
+  { id:'hygiene',    name:'Hygiène & Protection',        icon:'🧼', desc:'Gants, masques, gels, désinfectants',      img:'hygiene.jpg' },
+  { id:'diagnostic', name:'Diagnostic Médical',          icon:'🩺', desc:'Tensiomètres, thermomètres, stéthoscopes', img:'diagnostic.jpg' },
+  { id:'materiel',   name:'Matériel Médical',            icon:'🏥', desc:'Lits, fauteuils, équipements cliniques',   img:'materiel.jpg' },
+  { id:'injection',  name:'Injection & Drainage',        icon:'💉', desc:'Seringues, cathéters, perfusions',         img:'injection.jpg' },
+  { id:'soins',      name:'Soins & Sutures',             icon:'🩹', desc:'Pansements, fils, compresses stériles',    img:'soins.jpg' },
+  { id:'bebe',       name:'Bébés & Mamans',              icon:'👶', desc:'Couches, lait, tire-lait, accessoires',    img:'bebe.jpg' },
+  { id:'bienetre',   name:'Santé & Bien-être',           icon:'💚', desc:'Compléments, tensiomètres, oxymètres',     img:'bienetre.jpg' },
+  { id:'beaute',     name:'Soins Peau, Cheveux & Corps', icon:'✨', desc:'Crèmes, sérums, huiles, soins du corps',   img:'beaute.jpg' }
 ];
 
 const PRODUCTS = [
