@@ -519,16 +519,24 @@
 <script>
 const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyX9cHzd7-jDiEfa5tGgl-6snU-74Dy7dHEHfMdTgelJvNepINBwGBsKBxMnnOKhcE/exec";
 
-/* ============ CATEGORIES — utilisez vos images locales ============ */
+/* ============ CATEGORIES — VOS 8 IMAGES ============ */
 const CATEGORIES = [
-  { id:'hygiene',    name:'Hygiène & Protection',        icon:'🧼', desc:'Gants, masques, gels, désinfectants',      img:'hygiene.jpg' },
-  { id:'diagnostic', name:'Diagnostic Médical',          icon:'🩺', desc:'Tensiomètres, thermomètres, stéthoscopes', img:'diagnostic.jpg' },
-  { id:'materiel',   name:'Matériel Médical',            icon:'🏥', desc:'Lits, fauteuils, équipements cliniques',   img:'materiel.jpg' },
-  { id:'injection',  name:'Injection & Drainage',        icon:'💉', desc:'Seringues, cathéters, perfusions',         img:'injection.jpg' },
-  { id:'soins',      name:'Soins & Sutures',             icon:'🩹', desc:'Pansements, fils, compresses stériles',    img:'soins.jpg' },
-  { id:'bebe',       name:'Bébés & Mamans',              icon:'👶', desc:'Couches, lait, tire-lait, accessoires',    img:'bebe.jpg' },
-  { id:'bienetre',   name:'Santé & Bien-être',           icon:'💚', desc:'Compléments, tensiomètres, oxymètres',     img:'bienetre.jpg' },
-  { id:'beaute',     name:'Soins Peau, Cheveux & Corps', icon:'✨', desc:'Crèmes, sérums, huiles, soins du corps',   img:'beaute.jpg' }
+  { id:'hygiene',    name:'Hygiène & Protection',        icon:'🧼', desc:'Gants, masques, gels, désinfectants',
+    img:'https://i.postimg.cc/k5JWh5pm/Whats-App-Image-2026-09-29-at-15-05-40.webp' },
+  { id:'diagnostic', name:'Diagnostic Médical',          icon:'🩺', desc:'Tensiomètres, thermomètres, stéthoscopes',
+    img:'https://i.postimg.cc/CdpqCMq6/Whats-App-Image-2026-09-29-at-15-05-40-(1).webp' },
+  { id:'materiel',   name:'Matériel Médical',            icon:'🏥', desc:'Lits, fauteuils, équipements cliniques',
+    img:'https://i.postimg.cc/zD6Fc1WJ/Whats-App-Image-2026-09-29-at-15-05-40-(2).webp' },
+  { id:'injection',  name:'Injection & Drainage',        icon:'💉', desc:'Seringues, cathéters, perfusions',
+    img:'https://i.postimg.cc/9MzyLxQP/Whats-App-Image-2026-09-29-at-15-05-40-(3).webp' },
+  { id:'soins',      name:'Soins & Sutures',             icon:'🩹', desc:'Pansements, fils, compresses stériles',
+    img:'https://i.postimg.cc/GhvGgTdP/Whats-App-Image-2026-09-29-at-15-05-40-(4).webp' },
+  { id:'bebe',       name:'Bébés & Mamans',              icon:'👶', desc:'Couches, lait, tire-lait, accessoires',
+    img:'https://i.postimg.cc/BvnFvhDK/Whats-App-Image-2026-09-29-at-15-05-40-(5).webp' },
+  { id:'bienetre',   name:'Santé & Bien-être',           icon:'💚', desc:'Compléments, tensiomètres, oxymètres',
+    img:'https://i.postimg.cc/cCwgzPyr/Whats-App-Image-2026-09-29-at-15-05-40-(6).webp' },
+  { id:'beaute',     name:'Soins Peau, Cheveux & Corps', icon:'✨', desc:'Crèmes, sérums, huiles, soins du corps',
+    img:'https://i.postimg.cc/CLCnsys4/Whats-App-Image-2026-09-29-at-15-05-40-(7).webp' }
 ];
 
 const PRODUCTS = [
