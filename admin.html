@@ -10,12 +10,26 @@
   body { font-family: system-ui, -apple-system, sans-serif; }
   ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
   .line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+  /* 🖨️ Styles d'impression */
+  @media print {
+    body * { visibility: hidden; }
+    #printArea, #printArea * { visibility: visible; }
+    #printArea {
+      position: absolute;
+      left: 0; top: 0;
+      width: 100%;
+      padding: 20px;
+      background: white;
+    }
+    .no-print { display: none !important; }
+  }
 </style>
 </head>
 <body class="bg-slate-100 text-slate-800">
 
 <!-- HEADER -->
-<header class="bg-white border-b sticky top-0 z-30">
+<header class="bg-white border-b sticky top-0 z-30 no-print">
   <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-teal-500 flex items-center justify-center text-white font-bold">N</div>
@@ -32,7 +46,7 @@
 </header>
 
 <!-- TABS -->
-<nav class="bg-white border-b sticky top-[64px] z-20">
+<nav class="bg-white border-b sticky top-[64px] z-20 no-print">
   <div class="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto">
     <button data-tab="dashboard" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-blue-600 text-blue-600 whitespace-nowrap">📊 Dashboard</button>
     <button data-tab="products" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-blue-600 whitespace-nowrap">📦 Produits</button>
@@ -44,7 +58,7 @@
 <main class="max-w-7xl mx-auto px-4 py-6">
 
   <!-- DASHBOARD -->
-  <section id="tab-dashboard" class="tab-content">
+  <section id="tab-dashboard" class="tab-content no-print">
     <h2 class="text-2xl font-bold mb-4">Tableau de bord</h2>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div class="bg-white rounded-2xl p-5 shadow-sm border">
@@ -67,7 +81,7 @@
   </section>
 
   <!-- PRODUCTS -->
-  <section id="tab-products" class="tab-content hidden">
+  <section id="tab-products" class="tab-content hidden no-print">
     <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
       <h2 class="text-2xl font-bold">Produits</h2>
       <button onclick="openProductModal()" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold flex items-center gap-2">
@@ -76,14 +90,13 @@
       </button>
     </div>
 
-    <!-- 🔍 SEARCH + FILTER -->
     <div class="bg-white rounded-2xl shadow-sm border p-4 mb-4 grid grid-cols-1 md:grid-cols-3 gap-3">
       <div class="md:col-span-2 relative">
         <input id="searchProduct" type="text" placeholder="🔍 Rechercher un produit par nom..."
           class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none"/>
         <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
       </div>
-      <select id="filterCategory" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none bg-white">
+      <select id="filterCategory" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none bg-white">
         <option value="">🏷️ Toutes les catégories</option>
       </select>
     </div>
@@ -116,7 +129,7 @@
   </section>
 
   <!-- CATEGORIES -->
-  <section id="tab-categories" class="tab-content hidden">
+  <section id="tab-categories" class="tab-content hidden no-print">
     <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
       <h2 class="text-2xl font-bold">Catégories</h2>
       <button onclick="openCategoryModal()" class="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold flex items-center gap-2">
@@ -128,18 +141,51 @@
   </section>
 
   <!-- ORDERS -->
-  <section id="tab-orders" class="tab-content hidden">
-    <h2 class="text-2xl font-bold mb-4">Commandes</h2>
+  <section id="tab-orders" class="tab-content hidden no-print">
+    <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+      <h2 class="text-2xl font-bold">Commandes</h2>
+      <p class="text-sm text-slate-500">Total affiché: <span id="ordersCount" class="font-bold text-slate-800">0</span> commande(s)</p>
+    </div>
+
+    <!-- 🔍 SEARCH + FILTER -->
+    <div class="bg-white rounded-2xl shadow-sm border p-4 mb-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div class="md:col-span-2 relative">
+        <input id="searchOrder" type="text" placeholder="🔍 Rechercher par nom ou téléphone..."
+          class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none"/>
+        <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+      </div>
+      <button onclick="clearOrderFilters()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-semibold text-sm">✕ Effacer</button>
+    </div>
+
+    <!-- FILTRES PAR STATUT -->
+    <div class="flex flex-wrap gap-2 mb-4">
+      <button onclick="setStatusFilter('all')" data-status="all" class="status-filter px-4 py-2 rounded-full text-sm font-semibold transition bg-blue-600 text-white shadow-md">
+        📋 Toutes (<span id="countAll">0</span>)
+      </button>
+      <button onclick="setStatusFilter('pending')" data-status="pending" class="status-filter px-4 py-2 rounded-full text-sm font-semibold transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+        ⏳ En attente (<span id="countPending">0</span>)
+      </button>
+      <button onclick="setStatusFilter('confirmed')" data-status="confirmed" class="status-filter px-4 py-2 rounded-full text-sm font-semibold transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+        ✅ Confirmées (<span id="countConfirmed">0</span>)
+      </button>
+      <button onclick="setStatusFilter('delivered')" data-status="delivered" class="status-filter px-4 py-2 rounded-full text-sm font-semibold transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+        📦 Livrées (<span id="countDelivered">0</span>)
+      </button>
+      <button onclick="setStatusFilter('cancelled')" data-status="cancelled" class="status-filter px-4 py-2 rounded-full text-sm font-semibold transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+        ❌ Annulées (<span id="countCancelled">0</span>)
+      </button>
+    </div>
+
     <div id="orders-list" class="space-y-3"></div>
     <div id="orders-empty" class="hidden text-center py-12 text-slate-400 bg-white rounded-2xl border">
-      <p>Aucune commande pour le moment.</p>
+      <p>Aucune commande trouvée.</p>
     </div>
   </section>
 
 </main>
 
 <!-- ============ PRODUCT MODAL ============ -->
-<div id="productModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4">
+<div id="productModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4 no-print">
   <div onclick="closeProductModal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
   <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto">
     <div class="p-6 border-b flex items-center justify-between sticky top-0 bg-white z-10">
@@ -150,19 +196,16 @@
     </div>
     <form id="productForm" onsubmit="saveProduct(event)" class="p-6 space-y-4">
       <input type="hidden" id="pf-id">
-      
       <div>
         <label class="block text-sm font-semibold mb-1.5">Nom du produit *</label>
         <input id="pf-name" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none"/>
       </div>
-
       <div>
         <label class="block text-sm font-semibold mb-1.5">Catégorie *</label>
         <select id="pf-category" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none bg-white">
           <option value="">— Choisir une catégorie —</option>
         </select>
       </div>
-
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-semibold mb-1.5">Prix (DH) *</label>
@@ -173,7 +216,6 @@
           <input id="pf-oldprice" type="number" step="0.01" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none"/>
         </div>
       </div>
-
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-semibold mb-1.5">Stock</label>
@@ -181,15 +223,13 @@
         </div>
         <div>
           <label class="block text-sm font-semibold mb-1.5">Badge</label>
-          <input id="pf-badge" placeholder="ex: -30%, Nouveau" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none"/>
+          <input id="pf-badge" placeholder="ex: -30%" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none"/>
         </div>
       </div>
-
       <div>
         <label class="block text-sm font-semibold mb-1.5">Description</label>
         <textarea id="pf-desc" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none resize-none"></textarea>
       </div>
-
       <div>
         <label class="block text-sm font-semibold mb-1.5">Image *</label>
         <div class="flex items-start gap-4">
@@ -203,7 +243,6 @@
           </div>
         </div>
       </div>
-
       <div class="flex gap-3 pt-2">
         <button type="submit" id="pf-submit" class="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold">Enregistrer</button>
         <button type="button" onclick="closeProductModal()" class="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 font-semibold">Annuler</button>
@@ -213,7 +252,7 @@
 </div>
 
 <!-- ============ CATEGORY MODAL ============ -->
-<div id="categoryModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4">
+<div id="categoryModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4 no-print">
   <div onclick="closeCategoryModal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
   <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[95vh] overflow-y-auto">
     <div class="p-6 border-b flex items-center justify-between sticky top-0 bg-white z-10">
@@ -224,52 +263,39 @@
     </div>
     <form id="categoryForm" onsubmit="saveCategory(event)" class="p-6 space-y-4">
       <input type="hidden" id="cf-editing">
-      
       <div>
         <label class="block text-sm font-semibold mb-1.5">Identifiant (slug) *</label>
-        <input id="cf-id-slug" required pattern="[a-z0-9_\-]+" placeholder="ex: hygiene" 
-          class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-teal-500 outline-none"/>
-        <p class="text-xs text-slate-500 mt-1">حروف صغيرة فقط + أرقام، بلا مسافات (ex: <code>hygiene</code>, <code>soins_peau</code>)</p>
+        <input id="cf-id-slug" required pattern="[a-z0-9_\-]+" placeholder="ex: hygiene" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-teal-500 outline-none"/>
+        <p class="text-xs text-slate-500 mt-1">حروف صغيرة + أرقام، بلا مسافات</p>
       </div>
-
       <div>
         <label class="block text-sm font-semibold mb-1.5">Nom affiché *</label>
-        <input id="cf-name" required placeholder="ex: Hygiène & Protection"
-          class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-teal-500 outline-none"/>
+        <input id="cf-name" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-teal-500 outline-none"/>
       </div>
-
       <div>
         <label class="block text-sm font-semibold mb-1.5">Icône (emoji)</label>
-        <input id="cf-icon" placeholder="ex: 🧼" maxlength="4"
-          class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-teal-500 outline-none text-2xl"/>
+        <input id="cf-icon" maxlength="4" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-teal-500 outline-none text-2xl"/>
       </div>
-
       <div>
         <label class="block text-sm font-semibold mb-1.5">Description</label>
-        <input id="cf-desc" placeholder="ex: Gants, masques, gels, désinfectants"
-          class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-teal-500 outline-none"/>
+        <input id="cf-desc" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-teal-500 outline-none"/>
       </div>
-
       <div>
-        <label class="block text-sm font-semibold mb-1.5">Image de la catégorie *</label>
+        <label class="block text-sm font-semibold mb-1.5">Image *</label>
         <div class="flex items-start gap-4">
           <div id="cf-image-preview" class="w-24 h-24 rounded-xl bg-slate-100 flex items-center justify-center overflow-hidden border-2 border-dashed border-slate-300 shrink-0">
             <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
           </div>
           <div class="flex-1">
             <input type="file" id="cf-image" accept="image/*" class="w-full text-sm"/>
-            <p class="text-xs text-slate-500 mt-2">JPG, PNG, WebP. Max 5 MB.</p>
             <input type="hidden" id="cf-image-url">
           </div>
         </div>
       </div>
-
       <div>
         <label class="block text-sm font-semibold mb-1.5">Ordre d'affichage</label>
         <input id="cf-order" type="number" value="0" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-teal-500 outline-none"/>
-        <p class="text-xs text-slate-500 mt-1">0 = premier, 1 = deuxième, ...</p>
       </div>
-
       <div class="flex gap-3 pt-2">
         <button type="submit" id="cf-submit" class="flex-1 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold">Enregistrer</button>
         <button type="button" onclick="closeCategoryModal()" class="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 font-semibold">Annuler</button>
@@ -279,9 +305,12 @@
 </div>
 
 <!-- TOAST -->
-<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] hidden">
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] hidden no-print">
   <div class="bg-slate-900 text-white px-5 py-3 rounded-full shadow-2xl text-sm font-medium" id="toastMsg">OK</div>
 </div>
+
+<!-- 🖨️ ZONE D'IMPRESSION (cachée, devient visible uniquement à l'impression) -->
+<div id="printArea" style="display:none;"></div>
 
 <script>
 // ============ CONFIG ============
@@ -306,6 +335,8 @@ let editingProductId = null;
 let editingCategoryId = null;
 let filterSearch = '';
 let filterCategory = '';
+let orderSearch = '';
+let statusFilter = 'all';
 
 // ============ TOAST ============
 let toastTimer;
@@ -333,28 +364,22 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   };
 });
 
-// ============ SEARCH & FILTER ============
+// ============ PRODUCT SEARCH & FILTER ============
 document.getElementById('searchProduct').addEventListener('input', e => {
   filterSearch = e.target.value.toLowerCase().trim();
   renderProducts();
   updateClearButton();
 });
-
 document.getElementById('filterCategory').addEventListener('change', e => {
   filterCategory = e.target.value;
   renderProducts();
   updateClearButton();
 });
-
 function updateClearButton() {
   const btn = document.getElementById('clearFiltersBtn');
-  if (filterSearch || filterCategory) {
-    btn.classList.remove('hidden');
-  } else {
-    btn.classList.add('hidden');
-  }
+  if (filterSearch || filterCategory) btn.classList.remove('hidden');
+  else btn.classList.add('hidden');
 }
-
 function clearFilters() {
   document.getElementById('searchProduct').value = '';
   document.getElementById('filterCategory').value = '';
@@ -364,12 +389,36 @@ function clearFilters() {
   updateClearButton();
 }
 
+// ============ ORDER SEARCH & FILTER ============
+document.getElementById('searchOrder').addEventListener('input', e => {
+  orderSearch = e.target.value.toLowerCase().trim();
+  renderOrders();
+});
+
+function setStatusFilter(status) {
+  statusFilter = status;
+  document.querySelectorAll('.status-filter').forEach(btn => {
+    if (btn.dataset.status === status) {
+      btn.className = 'status-filter px-4 py-2 rounded-full text-sm font-semibold transition bg-blue-600 text-white shadow-md';
+    } else {
+      btn.className = 'status-filter px-4 py-2 rounded-full text-sm font-semibold transition bg-slate-100 text-slate-700 hover:bg-slate-200';
+    }
+  });
+  renderOrders();
+}
+
+function clearOrderFilters() {
+  document.getElementById('searchOrder').value = '';
+  orderSearch = '';
+  setStatusFilter('all');
+}
+
 // ============ LOAD DATA ============
 async function loadAll() {
   const [cats, prods, ords] = await Promise.all([
     sb.from('categories').select('*').order('display_order'),
     sb.from('products').select('*').order('created_at', { ascending: false }),
-    sb.from('orders').select('*').order('created_at', { ascending: false }).limit(50)
+    sb.from('orders').select('*').order('created_at', { ascending: false }).limit(200)
   ]);
   categories = cats.data || [];
   products = prods.data || [];
@@ -396,12 +445,8 @@ function renderProducts() {
   const countEl = document.getElementById('productsCount');
 
   let filtered = products;
-  if (filterSearch) {
-    filtered = filtered.filter(p => p.name.toLowerCase().includes(filterSearch));
-  }
-  if (filterCategory) {
-    filtered = filtered.filter(p => p.category_id === filterCategory);
-  }
+  if (filterSearch) filtered = filtered.filter(p => p.name.toLowerCase().includes(filterSearch));
+  if (filterCategory) filtered = filtered.filter(p => p.category_id === filterCategory);
 
   countEl.textContent = filtered.length;
 
@@ -450,7 +495,6 @@ function fillCategoryDropdown() {
     sel.appendChild(opt);
   });
 }
-
 function fillCategoryFilter() {
   const sel = document.getElementById('filterCategory');
   const current = sel.value;
@@ -584,10 +628,7 @@ function renderCategories() {
         <div class="text-xs text-slate-500 mt-1 line-clamp-2">${c.description || ''}</div>
         <div class="text-[10px] text-slate-400 mt-1">ID: <code>${c.id}</code></div>
         <div class="mt-3 flex gap-2">
-          <button onclick="editCategory('${c.id}')" class="flex-1 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 text-sm font-semibold flex items-center justify-center gap-1">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-            Modifier
-          </button>
+          <button onclick="editCategory('${c.id}')" class="flex-1 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 text-sm font-semibold">Modifier</button>
           <button onclick="deleteCategory('${c.id}')" class="py-2 px-3 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg>
           </button>
@@ -641,7 +682,6 @@ async function saveCategory(e) {
     let imageUrl = document.getElementById('cf-image-url').value;
     const file = document.getElementById('cf-image').files[0];
 
-    // Upload image if new file
     if (file) {
       const ext = file.name.split('.').pop();
       const fileName = `cat-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
@@ -667,12 +707,10 @@ async function saveCategory(e) {
     };
 
     if (editingCategoryId) {
-      // Modifier (on ne change pas l'ID)
       const { error } = await sb.from('categories').update(payload).eq('id', editingCategoryId);
       if (error) throw error;
       showToast('✅ Catégorie modifiée');
     } else {
-      // Ajouter (avec ID slug)
       payload.id = document.getElementById('cf-id-slug').value.trim().toLowerCase();
       const { error } = await sb.from('categories').insert(payload);
       if (error) throw error;
@@ -694,9 +732,9 @@ async function deleteCategory(id) {
   const c = categories.find(x => x.id === id);
   const count = products.filter(p => p.category_id === id).length;
   if (count > 0) {
-    if (!confirm(`⚠️ هذا القسم فيه ${count} منتج.\n\nحذف القسم غادي يحذف جميع المنتجات ديالو.\n\nواش بغيتي تكمل؟`)) return;
+    if (!confirm(`⚠️ Cette catégorie contient ${count} produit(s).\n\nLa suppression effacera tous ses produits.\n\nContinuer ?`)) return;
   } else {
-    if (!confirm(`Supprimer la catégorie "${c.name}" ?`)) return;
+    if (!confirm(`Supprimer "${c.name}" ?`)) return;
   }
   const { error } = await sb.from('categories').delete().eq('id', id);
   if (error) return showToast('خطأ: ' + error.message, false);
@@ -708,45 +746,80 @@ async function deleteCategory(id) {
 function renderOrders() {
   const list = document.getElementById('orders-list');
   const empty = document.getElementById('orders-empty');
-  if (!orders.length) {
+
+  // Compteurs
+  document.getElementById('countAll').textContent = orders.length;
+  document.getElementById('countPending').textContent = orders.filter(o => o.status === 'pending').length;
+  document.getElementById('countConfirmed').textContent = orders.filter(o => o.status === 'confirmed').length;
+  document.getElementById('countDelivered').textContent = orders.filter(o => o.status === 'delivered').length;
+  document.getElementById('countCancelled').textContent = orders.filter(o => o.status === 'cancelled').length;
+
+  // Filtrer
+  let filtered = orders;
+  if (statusFilter !== 'all') {
+    filtered = filtered.filter(o => o.status === statusFilter);
+  }
+  if (orderSearch) {
+    filtered = filtered.filter(o =>
+      (o.customer_name || '').toLowerCase().includes(orderSearch) ||
+      (o.phone || '').toLowerCase().includes(orderSearch)
+    );
+  }
+
+  document.getElementById('ordersCount').textContent = filtered.length;
+
+  if (!filtered.length) {
     list.innerHTML = '';
     empty.classList.remove('hidden');
     return;
   }
   empty.classList.add('hidden');
-  list.innerHTML = orders.map(o => {
-    const statusColors = {
-      pending: 'bg-amber-100 text-amber-700',
-      confirmed: 'bg-blue-100 text-blue-700',
-      delivered: 'bg-emerald-100 text-emerald-700',
-      cancelled: 'bg-rose-100 text-rose-700'
-    };
+
+  const statusConfig = {
+    pending: { label: '⏳ En attente', color: 'amber', border: 'border-l-amber-500', badge: 'bg-amber-100 text-amber-700' },
+    confirmed: { label: '✅ Confirmée', color: 'blue', border: 'border-l-blue-500', badge: 'bg-blue-100 text-blue-700' },
+    delivered: { label: '📦 Livrée', color: 'emerald', border: 'border-l-emerald-500', badge: 'bg-emerald-100 text-emerald-700' },
+    cancelled: { label: '❌ Annulée', color: 'rose', border: 'border-l-rose-500', badge: 'bg-rose-100 text-rose-700' }
+  };
+
+  list.innerHTML = filtered.map(o => {
+    const cfg = statusConfig[o.status] || statusConfig.pending;
     const produits = Array.isArray(o.products) ? o.products.map(p => `${p.nom} x${p.qte}`).join(', ') : '';
     return `
-      <div class="bg-white rounded-2xl border p-5 shadow-sm">
+      <div class="bg-white rounded-2xl border border-l-4 ${cfg.border} p-5 shadow-sm hover:shadow-md transition">
         <div class="flex items-start justify-between gap-4 flex-wrap">
-          <div class="flex-1 min-w-[200px]">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="font-bold">#${o.id}</span>
-              <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${statusColors[o.status] || 'bg-slate-100'}">${o.status}</span>
+          <div class="flex-1 min-w-[250px]">
+            <div class="flex items-center gap-2 mb-2 flex-wrap">
+              <span class="font-bold text-lg">#${o.id}</span>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${cfg.badge}">${cfg.label}</span>
             </div>
-            <div class="text-sm space-y-1 text-slate-600">
-              <div>👤 <strong>${o.customer_name}</strong></div>
-              <div>📞 ${o.phone}</div>
-              <div>🏙️ ${o.city} — ${o.address}</div>
-              ${o.note ? `<div>📝 ${o.note}</div>` : ''}
-              <div class="text-xs text-slate-500 mt-2">🛒 ${produits}</div>
+            <div class="text-sm space-y-1.5 text-slate-600">
+              <div class="flex items-center gap-2">👤 <strong>${o.customer_name}</strong></div>
+              <div class="flex items-center gap-2">📞 <a href="tel:${o.phone}" class="text-blue-600 hover:underline">${o.phone}</a></div>
+              <div class="flex items-center gap-2">🏙️ ${o.city} — ${o.address}</div>
+              ${o.note ? `<div class="flex items-center gap-2">📝 ${o.note}</div>` : ''}
+              <div class="text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">🛒 ${produits}</div>
             </div>
           </div>
-          <div class="text-right">
-            <div class="text-xl font-bold text-blue-600">${o.total} DH</div>
-            <div class="text-xs text-slate-500 mb-3">${new Date(o.created_at).toLocaleString('fr-FR')}</div>
-            <select onchange="updateOrderStatus(${o.id}, this.value)" class="text-sm px-3 py-2 rounded-lg border">
+          <div class="text-right flex flex-col items-end gap-2">
+            <div class="text-2xl font-bold text-blue-600">${o.total} DH</div>
+            <div class="text-xs text-slate-500">${new Date(o.created_at).toLocaleString('fr-FR')}</div>
+            <select onchange="updateOrderStatus(${o.id}, this.value)" class="text-sm px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-500 outline-none">
               <option value="pending" ${o.status==='pending'?'selected':''}>⏳ En attente</option>
               <option value="confirmed" ${o.status==='confirmed'?'selected':''}>✅ Confirmée</option>
               <option value="delivered" ${o.status==='delivered'?'selected':''}>📦 Livrée</option>
               <option value="cancelled" ${o.status==='cancelled'?'selected':''}>❌ Annulée</option>
             </select>
+            <div class="flex gap-2">
+              <a href="https://wa.me/${o.phone.replace(/[^0-9]/g, '').replace(/^0/, '212')}" target="_blank" 
+                 class="px-3 py-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-600 text-xs font-semibold flex items-center gap-1">
+                💬 WhatsApp
+              </a>
+              <button onclick="printOrder(${o.id})" 
+                 class="px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1">
+                🖨️ Imprimer
+              </button>
+            </div>
           </div>
         </div>
       </div>`;
@@ -758,6 +831,127 @@ async function updateOrderStatus(id, status) {
   if (error) return showToast('خطأ: ' + error.message, false);
   showToast('✅ Statut mis à jour');
   await loadAll();
+}
+
+// ============ 🖨️ PRINT ORDER ============
+function printOrder(id) {
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
+
+  const produits = Array.isArray(o.products) ? o.products : [];
+  const sub = o.subtotal || 0;
+  const ship = o.shipping || 0;
+  const total = o.total || 0;
+
+  const produitsHtml = produits.map((p, i) => `
+    <tr>
+      <td style="padding:10px;border-bottom:1px solid #e2e8f0;text-align:center">${i + 1}</td>
+      <td style="padding:10px;border-bottom:1px solid #e2e8f0">${p.nom}</td>
+      <td style="padding:10px;border-bottom:1px solid #e2e8f0;text-align:center">${p.qte}</td>
+      <td style="padding:10px;border-bottom:1px solid #e2e8f0;text-align:right">${p.prix} DH</td>
+      <td style="padding:10px;border-bottom:1px solid #e2e8f0;text-align:right;font-weight:bold">${p.prix * p.qte} DH</td>
+    </tr>
+  `).join('');
+
+  const printContent = `
+    <div style="max-width:800px;margin:0 auto;font-family:Arial,sans-serif;color:#0f172a">
+      
+      <!-- HEADER -->
+      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #0082cd;padding-bottom:20px;margin-bottom:30px">
+        <div>
+          <h1 style="margin:0;font-size:32px;color:#0082cd">NathalMedic</h1>
+          <p style="margin:5px 0 0;color:#64748b;font-size:14px">Matériel Médical · Maroc</p>
+        </div>
+        <div style="text-align:right;font-size:13px;color:#64748b;line-height:1.6">
+          <div>📞 (+212) 665-440953</div>
+          <div>✉️ nathalmedic@gmail.com</div>
+        </div>
+      </div>
+
+      <!-- FACTURE TITLE -->
+      <div style="text-align:center;margin-bottom:30px">
+        <h2 style="margin:0;font-size:24px;color:#0f172a">FACTURE</h2>
+        <p style="margin:5px 0 0;color:#64748b;font-size:14px">N° ${String(o.id).padStart(5, '0')} — ${new Date(o.created_at).toLocaleDateString('fr-FR')}</p>
+      </div>
+
+      <!-- INFOS CLIENT -->
+      <div style="background:#f8fafc;border-radius:12px;padding:20px;margin-bottom:30px">
+        <h3 style="margin:0 0 12px;font-size:14px;color:#0082cd;text-transform:uppercase;letter-spacing:1px">Informations client</h3>
+        <table style="width:100%;font-size:14px;line-height:1.8">
+          <tr>
+            <td style="width:120px;color:#64748b">Nom:</td>
+            <td style="font-weight:bold">${o.customer_name}</td>
+          </tr>
+          <tr>
+            <td style="color:#64748b">Téléphone:</td>
+            <td>${o.phone}</td>
+          </tr>
+          <tr>
+            <td style="color:#64748b">Ville:</td>
+            <td>${o.city}</td>
+          </tr>
+          <tr>
+            <td style="color:#64748b;vertical-align:top">Adresse:</td>
+            <td>${o.address}</td>
+          </tr>
+          ${o.note ? `<tr><td style="color:#64748b;vertical-align:top">Note:</td><td>${o.note}</td></tr>` : ''}
+        </table>
+      </div>
+
+      <!-- PRODUITS -->
+      <h3 style="font-size:14px;color:#0082cd;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Détails de la commande</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <thead>
+          <tr style="background:#0082cd;color:white">
+            <th style="padding:10px;text-align:center;width:40px">#</th>
+            <th style="padding:10px;text-align:left">Produit</th>
+            <th style="padding:10px;text-align:center;width:60px">Qté</th>
+            <th style="padding:10px;text-align:right;width:100px">Prix</th>
+            <th style="padding:10px;text-align:right;width:100px">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${produitsHtml}
+        </tbody>
+      </table>
+
+      <!-- TOTAUX -->
+      <div style="margin-top:20px;display:flex;justify-content:flex-end">
+        <table style="font-size:14px;min-width:280px">
+          <tr>
+            <td style="padding:8px;color:#64748b">Sous-total:</td>
+            <td style="padding:8px;text-align:right;font-weight:600">${sub} DH</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;color:#64748b">Livraison:</td>
+            <td style="padding:8px;text-align:right;font-weight:600">${ship === 0 ? 'Gratuite' : ship + ' DH'}</td>
+          </tr>
+          <tr style="border-top:2px solid #0082cd">
+            <td style="padding:12px 8px;font-weight:bold;font-size:16px">TOTAL:</td>
+            <td style="padding:12px 8px;text-align:right;font-weight:bold;font-size:18px;color:#0082cd">${total} DH</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- FOOTER -->
+      <div style="margin-top:50px;padding-top:20px;border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8">
+        <p style="margin:0">Merci pour votre confiance — NathalMedic © ${new Date().getFullYear()}</p>
+        <p style="margin:5px 0 0">Paiement à la livraison · Livraison gratuite dès 500 DH</p>
+      </div>
+
+    </div>
+  `;
+
+  const printArea = document.getElementById('printArea');
+  printArea.innerHTML = printContent;
+  printArea.style.display = 'block';
+  
+  window.print();
+  
+  setTimeout(() => {
+    printArea.style.display = 'none';
+    printArea.innerHTML = '';
+  }, 500);
 }
 
 // ============ INIT ============
