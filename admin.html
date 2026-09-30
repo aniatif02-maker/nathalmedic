@@ -68,13 +68,31 @@
 
   <!-- PRODUCTS -->
   <section id="tab-products" class="tab-content hidden">
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
       <h2 class="text-2xl font-bold">Produits</h2>
       <button onclick="openProductModal()" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold flex items-center gap-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         Ajouter un produit
       </button>
     </div>
+
+    <!-- 🔍 SEARCH + FILTER -->
+    <div class="bg-white rounded-2xl shadow-sm border p-4 mb-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div class="md:col-span-2 relative">
+        <input id="searchProduct" type="text" placeholder="🔍 Rechercher un produit par nom..."
+          class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none"/>
+        <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+      </div>
+      <select id="filterCategory" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none bg-white">
+        <option value="">🏷️ Toutes les catégories</option>
+      </select>
+    </div>
+
+    <div class="flex items-center justify-between mb-3 px-2">
+      <p class="text-sm text-slate-500">Affichage: <span id="productsCount" class="font-semibold text-slate-800">0</span> produit(s)</p>
+      <button onclick="clearFilters()" id="clearFiltersBtn" class="hidden text-sm text-blue-600 hover:text-blue-700 font-semibold">✕ Effacer les filtres</button>
+    </div>
+
     <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
@@ -92,7 +110,7 @@
         </table>
       </div>
       <div id="products-empty" class="hidden text-center py-12 text-slate-400">
-        <p>Aucun produit. Cliquez sur "Ajouter un produit" pour commencer.</p>
+        <p>Aucun produit trouvé.</p>
       </div>
     </div>
   </section>
@@ -114,7 +132,7 @@
 
 </main>
 
-<!-- ============ PRODUCT MODAL ============ -->
+<!-- PRODUCT MODAL -->
 <div id="productModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4">
   <div onclick="closeProductModal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
   <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto">
@@ -129,12 +147,12 @@
       
       <div>
         <label class="block text-sm font-semibold mb-1.5">Nom du produit *</label>
-        <input id="pf-name" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none"/>
+        <input id="pf-name" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none"/>
       </div>
 
       <div>
         <label class="block text-sm font-semibold mb-1.5">Catégorie *</label>
-        <select id="pf-category" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none bg-white">
+        <select id="pf-category" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none bg-white">
           <option value="">— Choisir une catégorie —</option>
         </select>
       </div>
@@ -156,8 +174,8 @@
           <input id="pf-stock" type="number" value="0" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none"/>
         </div>
         <div>
-          <label class="block text-sm font-semibold mb-1.5">Badge (ex: -30%, Nouveau)</label>
-          <input id="pf-badge" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none"/>
+          <label class="block text-sm font-semibold mb-1.5">Badge</label>
+          <input id="pf-badge" placeholder="ex: -30%, Nouveau" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none"/>
         </div>
       </div>
 
@@ -174,7 +192,7 @@
           </div>
           <div class="flex-1">
             <input type="file" id="pf-image" accept="image/*" class="w-full text-sm"/>
-            <p class="text-xs text-slate-500 mt-2">Format: JPG, PNG, WebP. Max 5 MB.</p>
+            <p class="text-xs text-slate-500 mt-2">JPG, PNG, WebP. Max 5 MB.</p>
             <input type="hidden" id="pf-image-url">
           </div>
         </div>
@@ -213,6 +231,8 @@ let categories = [];
 let products = [];
 let orders = [];
 let editingProductId = null;
+let filterSearch = '';
+let filterCategory = '';
 
 // ============ TOAST ============
 let toastTimer;
@@ -240,6 +260,37 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   };
 });
 
+// ============ SEARCH & FILTER ============
+document.getElementById('searchProduct').addEventListener('input', e => {
+  filterSearch = e.target.value.toLowerCase().trim();
+  renderProducts();
+  updateClearButton();
+});
+
+document.getElementById('filterCategory').addEventListener('change', e => {
+  filterCategory = e.target.value;
+  renderProducts();
+  updateClearButton();
+});
+
+function updateClearButton() {
+  const btn = document.getElementById('clearFiltersBtn');
+  if (filterSearch || filterCategory) {
+    btn.classList.remove('hidden');
+  } else {
+    btn.classList.add('hidden');
+  }
+}
+
+function clearFilters() {
+  document.getElementById('searchProduct').value = '';
+  document.getElementById('filterCategory').value = '';
+  filterSearch = '';
+  filterCategory = '';
+  renderProducts();
+  updateClearButton();
+}
+
 // ============ LOAD DATA ============
 async function loadAll() {
   const [cats, prods, ords] = await Promise.all([
@@ -255,6 +306,7 @@ async function loadAll() {
   renderCategories();
   renderOrders();
   fillCategoryDropdown();
+  fillCategoryFilter();
 }
 
 function renderStats() {
@@ -268,13 +320,26 @@ function renderStats() {
 function renderProducts() {
   const tbody = document.getElementById('products-tbody');
   const empty = document.getElementById('products-empty');
-  if (!products.length) {
+  const countEl = document.getElementById('productsCount');
+
+  // 🔍 Filtrer
+  let filtered = products;
+  if (filterSearch) {
+    filtered = filtered.filter(p => p.name.toLowerCase().includes(filterSearch));
+  }
+  if (filterCategory) {
+    filtered = filtered.filter(p => p.category_id === filterCategory);
+  }
+
+  countEl.textContent = filtered.length;
+
+  if (!filtered.length) {
     tbody.innerHTML = '';
     empty.classList.remove('hidden');
     return;
   }
   empty.classList.add('hidden');
-  tbody.innerHTML = products.map(p => {
+  tbody.innerHTML = filtered.map(p => {
     const cat = categories.find(c => c.id === p.category_id);
     return `
       <tr class="border-t hover:bg-slate-50">
@@ -292,10 +357,10 @@ function renderProducts() {
           <span class="${p.stock > 0 ? 'text-emerald-600' : 'text-rose-600'} font-semibold">${p.stock || 0}</span>
         </td>
         <td class="px-4 py-3 text-right">
-          <button onclick="editProduct(${p.id})" class="p-2 rounded-lg hover:bg-blue-50 text-blue-600">
+          <button onclick="editProduct(${p.id})" class="p-2 rounded-lg hover:bg-blue-50 text-blue-600" title="Modifier">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
           </button>
-          <button onclick="deleteProduct(${p.id})" class="p-2 rounded-lg hover:bg-rose-50 text-rose-600">
+          <button onclick="deleteProduct(${p.id})" class="p-2 rounded-lg hover:bg-rose-50 text-rose-600" title="Supprimer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg>
           </button>
         </td>
@@ -306,6 +371,17 @@ function renderProducts() {
 function fillCategoryDropdown() {
   const sel = document.getElementById('pf-category');
   sel.innerHTML = '<option value="">— Choisir une catégorie —</option>';
+  categories.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = `${c.icon || ''} ${c.name}`;
+    sel.appendChild(opt);
+  });
+}
+
+function fillCategoryFilter() {
+  const sel = document.getElementById('filterCategory');
+  sel.innerHTML = '<option value="">🏷️ Toutes les catégories</option>';
   categories.forEach(c => {
     const opt = document.createElement('option');
     opt.value = c.id;
