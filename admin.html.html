@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — NathalMedic</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  body { font-family: system-ui, -apple-system, sans-serif; }
+  ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+  .line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+<!-- HEADER -->
+<header class="bg-white border-b sticky top-0 z-30">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-teal-500 flex items-center justify-center text-white font-bold">N</div>
+      <div>
+        <div class="font-bold">NathalMedic</div>
+        <div class="text-xs text-slate-500">Panneau d'administration</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <a href="index.html" target="_blank" class="hidden md:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-100 text-sm">👁️ Voir le site</a>
+      <button onclick="logout()" class="px-3 py-2 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 text-sm font-semibold">Déconnexion</button>
+    </div>
+  </div>
+</header>
+
+<!-- TABS -->
+<nav class="bg-white border-b sticky top-[64px] z-20">
+  <div class="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto">
+    <button data-tab="dashboard" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-blue-600 text-blue-600 whitespace-nowrap">📊 Dashboard</button>
+    <button data-tab="products" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-blue-600 whitespace-nowrap">📦 Produits</button>
+    <button data-tab="categories" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-blue-600 whitespace-nowrap">🏷️ Catégories</button>
+    <button data-tab="orders" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-blue-600 whitespace-nowrap">📋 Commandes</button>
+  </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 py-6">
+
+  <!-- DASHBOARD -->
+  <section id="tab-dashboard" class="tab-content">
+    <h2 class="text-2xl font-bold mb-4">Tableau de bord</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border">
+        <div class="text-sm text-slate-500">Produits</div>
+        <div id="stat-products" class="text-3xl font-bold text-blue-600 mt-1">0</div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border">
+        <div class="text-sm text-slate-500">Catégories</div>
+        <div id="stat-categories" class="text-3xl font-bold text-teal-600 mt-1">0</div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border">
+        <div class="text-sm text-slate-500">Commandes</div>
+        <div id="stat-orders" class="text-3xl font-bold text-amber-600 mt-1">0</div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border">
+        <div class="text-sm text-slate-500">En attente</div>
+        <div id="stat-pending" class="text-3xl font-bold text-rose-600 mt-1">0</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section id="tab-products" class="tab-content hidden">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-2xl font-bold">Produits</h2>
+      <button onclick="openProductModal()" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        Ajouter un produit
+      </button>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-600 text-left">
+            <tr>
+              <th class="px-4 py-3">Image</th>
+              <th class="px-4 py-3">Nom</th>
+              <th class="px-4 py-3">Catégorie</th>
+              <th class="px-4 py-3">Prix</th>
+              <th class="px-4 py-3">Stock</th>
+              <th class="px-4 py-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="products-tbody"></tbody>
+        </table>
+      </div>
+      <div id="products-empty" class="hidden text-center py-12 text-slate-400">
+        <p>Aucun produit. Cliquez sur "Ajouter un produit" pour commencer.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section id="tab-categories" class="tab-content hidden">
+    <h2 class="text-2xl font-bold mb-4">Catégories</h2>
+    <div id="categories-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+  </section>
+
+  <!-- ORDERS -->
+  <section id="tab-orders" class="tab-content hidden">
+    <h2 class="text-2xl font-bold mb-4">Commandes</h2>
+    <div id="orders-list" class="space-y-3"></div>
+    <div id="orders-empty" class="hidden text-center py-12 text-slate-400 bg-white rounded-2xl border">
+      <p>Aucune commande pour le moment.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ PRODUCT MODAL ============ -->
+<div id="productModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4">
+  <div onclick="closeProductModal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+  <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto">
+    <div class="p-6 border-b flex items-center justify-between sticky top-0 bg-white z-10">
+      <h3 id="productModalTitle" class="text-xl font-bold">Ajouter un produit</h3>
+      <button onclick="closeProductModal()" class="p-2 rounded-lg hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="productForm" onsubmit="saveProduct(event)" class="p-6 space-y-4">
+      <input type="hidden" id="pf-id">
+      
+      <div>
+        <label class="block text-sm font-semibold mb-1.5">Nom du produit *</label>
+        <input id="pf-name" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none"/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold mb-1.5">Catégorie *</label>
+        <select id="pf-category" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none bg-white">
+          <option value="">— Choisir une catégorie —</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-semibold mb-1.5">Prix (DH) *</label>
+          <input id="pf-price" type="number" step="0.01" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1.5">Ancien prix (DH)</label>
+          <input id="pf-oldprice" type="number" step="0.01" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none"/>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-semibold mb-1.5">Stock</label>
+          <input id="pf-stock" type="number" value="0" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1.5">Badge (ex: -30%, Nouveau)</label>
+          <input id="pf-badge" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none"/>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold mb-1.5">Description</label>
+        <textarea id="pf-desc" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none resize-none"></textarea>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold mb-1.5">Image *</label>
+        <div class="flex items-start gap-4">
+          <div id="pf-image-preview" class="w-24 h-24 rounded-xl bg-slate-100 flex items-center justify-center overflow-hidden border-2 border-dashed border-slate-300">
+            <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          <div class="flex-1">
+            <input type="file" id="pf-image" accept="image/*" class="w-full text-sm"/>
+            <p class="text-xs text-slate-500 mt-2">Format: JPG, PNG, WebP. Max 5 MB.</p>
+            <input type="hidden" id="pf-image-url">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <button type="submit" id="pf-submit" class="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold">Enregistrer</button>
+        <button type="button" onclick="closeProductModal()" class="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 font-semibold">Annuler</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] hidden">
+  <div class="bg-slate-900 text-white px-5 py-3 rounded-full shadow-2xl text-sm font-medium" id="toastMsg">OK</div>
+</div>
+
+<script>
+// ============ CONFIG ============
+const SUPABASE_URL = "https://yrotphvqodmyukijkwzc.supabase.co";
+const SUPABASE_KEY = "sb_publishable_F-tXmeh3IX5t_n3CIpvZVQ_ED_uvNtm";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ============ AUTH ============
+if (localStorage.getItem('nm_admin') !== 'true') {
+  window.location.href = 'login.html';
+}
+function logout() {
+  localStorage.removeItem('nm_admin');
+  window.location.href = 'login.html';
+}
+
+// ============ STATE ============
+let categories = [];
+let products = [];
+let orders = [];
+let editingProductId = null;
+
+// ============ TOAST ============
+let toastTimer;
+function showToast(msg, ok = true) {
+  const t = document.getElementById('toast');
+  const m = document.getElementById('toastMsg');
+  m.textContent = msg;
+  m.className = `px-5 py-3 rounded-full shadow-2xl text-sm font-medium ${ok ? 'bg-slate-900 text-white' : 'bg-rose-600 text-white'}`;
+  t.classList.remove('hidden');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.add('hidden'), 2500);
+}
+
+// ============ TABS ============
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('border-blue-600','text-blue-600');
+      b.classList.add('border-transparent','text-slate-600');
+    });
+    btn.classList.add('border-blue-600','text-blue-600');
+    btn.classList.remove('border-transparent','text-slate-600');
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('tab-' + btn.dataset.tab).classList.remove('hidden');
+  };
+});
+
+// ============ LOAD DATA ============
+async function loadAll() {
+  const [cats, prods, ords] = await Promise.all([
+    sb.from('categories').select('*').order('display_order'),
+    sb.from('products').select('*').order('created_at', { ascending: false }),
+    sb.from('orders').select('*').order('created_at', { ascending: false }).limit(50)
+  ]);
+  categories = cats.data || [];
+  products = prods.data || [];
+  orders = ords.data || [];
+  renderStats();
+  renderProducts();
+  renderCategories();
+  renderOrders();
+  fillCategoryDropdown();
+}
+
+function renderStats() {
+  document.getElementById('stat-products').textContent = products.length;
+  document.getElementById('stat-categories').textContent = categories.length;
+  document.getElementById('stat-orders').textContent = orders.length;
+  document.getElementById('stat-pending').textContent = orders.filter(o => o.status === 'pending').length;
+}
+
+// ============ PRODUCTS ============
+function renderProducts() {
+  const tbody = document.getElementById('products-tbody');
+  const empty = document.getElementById('products-empty');
+  if (!products.length) {
+    tbody.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  tbody.innerHTML = products.map(p => {
+    const cat = categories.find(c => c.id === p.category_id);
+    return `
+      <tr class="border-t hover:bg-slate-50">
+        <td class="px-4 py-3">
+          <img src="${p.image_url}" class="w-12 h-12 rounded-lg object-cover" onerror="this.src='https://placehold.co/48x48?text=?'"/>
+        </td>
+        <td class="px-4 py-3 font-medium">${p.name}</td>
+        <td class="px-4 py-3">
+          <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-100 text-xs">
+            ${cat ? cat.icon + ' ' + cat.name : '—'}
+          </span>
+        </td>
+        <td class="px-4 py-3 font-bold">${p.price} DH</td>
+        <td class="px-4 py-3">
+          <span class="${p.stock > 0 ? 'text-emerald-600' : 'text-rose-600'} font-semibold">${p.stock || 0}</span>
+        </td>
+        <td class="px-4 py-3 text-right">
+          <button onclick="editProduct(${p.id})" class="p-2 rounded-lg hover:bg-blue-50 text-blue-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          </button>
+          <button onclick="deleteProduct(${p.id})" class="p-2 rounded-lg hover:bg-rose-50 text-rose-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg>
+          </button>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function fillCategoryDropdown() {
+  const sel = document.getElementById('pf-category');
+  sel.innerHTML = '<option value="">— Choisir une catégorie —</option>';
+  categories.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = `${c.icon || ''} ${c.name}`;
+    sel.appendChild(opt);
+  });
+}
+
+function openProductModal() {
+  editingProductId = null;
+  document.getElementById('productModalTitle').textContent = 'Ajouter un produit';
+  document.getElementById('productForm').reset();
+  document.getElementById('pf-id').value = '';
+  document.getElementById('pf-image-url').value = '';
+  document.getElementById('pf-image-preview').innerHTML = '<svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>';
+  fillCategoryDropdown();
+  document.getElementById('productModal').classList.remove('hidden');
+}
+function closeProductModal() {
+  document.getElementById('productModal').classList.add('hidden');
+}
+
+function editProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  editingProductId = id;
+  document.getElementById('productModalTitle').textContent = 'Modifier le produit';
+  document.getElementById('pf-id').value = p.id;
+  document.getElementById('pf-name').value = p.name;
+  document.getElementById('pf-price').value = p.price;
+  document.getElementById('pf-oldprice').value = p.old_price || '';
+  document.getElementById('pf-stock').value = p.stock || 0;
+  document.getElementById('pf-badge').value = p.badge || '';
+  document.getElementById('pf-desc').value = p.description || '';
+  document.getElementById('pf-image-url').value = p.image_url;
+  fillCategoryDropdown();
+  document.getElementById('pf-category').value = p.category_id;
+  document.getElementById('pf-image-preview').innerHTML = `<img src="${p.image_url}" class="w-full h-full object-cover"/>`;
+  document.getElementById('productModal').classList.remove('hidden');
+}
+
+async function saveProduct(e) {
+  e.preventDefault();
+  const btn = document.getElementById('pf-submit');
+  const old = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Enregistrement...';
+
+  try {
+    let imageUrl = document.getElementById('pf-image-url').value;
+    const file = document.getElementById('pf-image').files[0];
+
+    if (file) {
+      const ext = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error: upErr } = await sb.storage.from('products').upload(fileName, file);
+      if (upErr) throw upErr;
+      const { data: urlData } = sb.storage.from('products').getPublicUrl(fileName);
+      imageUrl = urlData.publicUrl;
+    }
+
+    if (!imageUrl) {
+      showToast('المرجو اختيار صورة', false);
+      btn.disabled = false;
+      btn.textContent = old;
+      return;
+    }
+
+    const payload = {
+      name: document.getElementById('pf-name').value.trim(),
+      category_id: document.getElementById('pf-category').value,
+      price: parseFloat(document.getElementById('pf-price').value),
+      old_price: document.getElementById('pf-oldprice').value ? parseFloat(document.getElementById('pf-oldprice').value) : null,
+      stock: parseInt(document.getElementById('pf-stock').value) || 0,
+      badge: document.getElementById('pf-badge').value.trim() || null,
+      description: document.getElementById('pf-desc').value.trim() || null,
+      image_url: imageUrl
+    };
+
+    if (editingProductId) {
+      const { error } = await sb.from('products').update(payload).eq('id', editingProductId);
+      if (error) throw error;
+      showToast('✅ Produit modifié');
+    } else {
+      const { error } = await sb.from('products').insert(payload);
+      if (error) throw error;
+      showToast('✅ Produit ajouté');
+    }
+
+    closeProductModal();
+    await loadAll();
+  } catch (err) {
+    console.error(err);
+    showToast('خطأ: ' + err.message, false);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = old;
+  }
+}
+
+async function deleteProduct(id) {
+  if (!confirm('Supprimer ce produit ?')) return;
+  const { error } = await sb.from('products').delete().eq('id', id);
+  if (error) return showToast('خطأ: ' + error.message, false);
+  showToast('🗑️ Produit supprimé');
+  await loadAll();
+}
+
+// ============ CATEGORIES ============
+function renderCategories() {
+  const grid = document.getElementById('categories-grid');
+  if (!categories.length) {
+    grid.innerHTML = '<p class="col-span-full text-center py-12 text-slate-400 bg-white rounded-2xl border">Aucune catégorie.</p>';
+    return;
+  }
+  grid.innerHTML = categories.map(c => `
+    <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+      <div class="aspect-video bg-slate-100 overflow-hidden">
+        ${c.image_url ? `<img src="${c.image_url}" class="w-full h-full object-cover"/>` : `<div class="w-full h-full flex items-center justify-center text-4xl">${c.icon||'📦'}</div>`}
+      </div>
+      <div class="p-4">
+        <div class="font-bold">${c.icon || ''} ${c.name}</div>
+        <div class="text-xs text-slate-500 mt-1 line-clamp-2">${c.description || ''}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============ ORDERS ============
+function renderOrders() {
+  const list = document.getElementById('orders-list');
+  const empty = document.getElementById('orders-empty');
+  if (!orders.length) {
+    list.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  list.innerHTML = orders.map(o => {
+    const statusColors = {
+      pending: 'bg-amber-100 text-amber-700',
+      confirmed: 'bg-blue-100 text-blue-700',
+      delivered: 'bg-emerald-100 text-emerald-700',
+      cancelled: 'bg-rose-100 text-rose-700'
+    };
+    const produits = Array.isArray(o.products) ? o.products.map(p => `${p.nom} x${p.qte}`).join(', ') : '';
+    return `
+      <div class="bg-white rounded-2xl border p-5 shadow-sm">
+        <div class="flex items-start justify-between gap-4 flex-wrap">
+          <div class="flex-1 min-w-[200px]">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="font-bold">#${o.id}</span>
+              <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${statusColors[o.status] || 'bg-slate-100'}">${o.status}</span>
+            </div>
+            <div class="text-sm space-y-1 text-slate-600">
+              <div>👤 <strong>${o.customer_name}</strong></div>
+              <div>📞 ${o.phone}</div>
+              <div>🏙️ ${o.city} — ${o.address}</div>
+              ${o.note ? `<div>📝 ${o.note}</div>` : ''}
+              <div class="text-xs text-slate-500 mt-2">🛒 ${produits}</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-xl font-bold text-blue-600">${o.total} DH</div>
+            <div class="text-xs text-slate-500 mb-3">${new Date(o.created_at).toLocaleString('fr-FR')}</div>
+            <select onchange="updateOrderStatus(${o.id}, this.value)" class="text-sm px-3 py-2 rounded-lg border">
+              <option value="pending" ${o.status==='pending'?'selected':''}>⏳ En attente</option>
+              <option value="confirmed" ${o.status==='confirmed'?'selected':''}>✅ Confirmée</option>
+              <option value="delivered" ${o.status==='delivered'?'selected':''}>📦 Livrée</option>
+              <option value="cancelled" ${o.status==='cancelled'?'selected':''}>❌ Annulée</option>
+            </select>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function updateOrderStatus(id, status) {
+  const { error } = await sb.from('orders').update({ status }).eq('id', id);
+  if (error) return showToast('خطأ: ' + error.message, false);
+  showToast('✅ Statut mis à jour');
+  await loadAll();
+}
+
+// ============ INIT ============
+loadAll();
+</script>
+</body>
+</html>
