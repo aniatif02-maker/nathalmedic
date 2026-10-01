@@ -10,8 +10,9 @@
   body { font-family: system-ui, -apple-system, sans-serif; }
   ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
   .line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card-hover { transition: transform .2s, box-shadow .2s; }
+  .card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -10px rgba(0,0,0,.15); }
 
-  /* 🖨️ Styles d'impression */
   @media print {
     body * { visibility: hidden; }
     #printArea, #printArea * { visibility: visible; }
@@ -60,22 +61,103 @@
   <!-- DASHBOARD -->
   <section id="tab-dashboard" class="tab-content no-print">
     <h2 class="text-2xl font-bold mb-4">Tableau de bord</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="bg-white rounded-2xl p-5 shadow-sm border">
-        <div class="text-sm text-slate-500">Produits</div>
-        <div id="stat-products" class="text-3xl font-bold text-blue-600 mt-1">0</div>
+    
+    <!-- KPI CARDS -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-blue-500 card-hover">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-sm text-slate-500">Produits</div>
+            <div id="stat-products" class="text-3xl font-bold text-blue-600 mt-1">0</div>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-2xl">📦</div>
+        </div>
       </div>
-      <div class="bg-white rounded-2xl p-5 shadow-sm border">
-        <div class="text-sm text-slate-500">Catégories</div>
-        <div id="stat-categories" class="text-3xl font-bold text-teal-600 mt-1">0</div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-teal-500 card-hover">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-sm text-slate-500">Catégories</div>
+            <div id="stat-categories" class="text-3xl font-bold text-teal-600 mt-1">0</div>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-teal-50 flex items-center justify-center text-2xl">🏷️</div>
+        </div>
       </div>
-      <div class="bg-white rounded-2xl p-5 shadow-sm border">
-        <div class="text-sm text-slate-500">Commandes</div>
-        <div id="stat-orders" class="text-3xl font-bold text-amber-600 mt-1">0</div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-amber-500 card-hover">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-sm text-slate-500">Commandes</div>
+            <div id="stat-orders" class="text-3xl font-bold text-amber-600 mt-1">0</div>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-2xl">📋</div>
+        </div>
       </div>
-      <div class="bg-white rounded-2xl p-5 shadow-sm border">
-        <div class="text-sm text-slate-500">En attente</div>
-        <div id="stat-pending" class="text-3xl font-bold text-rose-600 mt-1">0</div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-rose-500 card-hover">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-sm text-slate-500">En attente</div>
+            <div id="stat-pending" class="text-3xl font-bold text-rose-600 mt-1">0</div>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center text-2xl">⏳</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVENUE + CHART -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+      <div class="bg-gradient-to-br from-blue-600 to-teal-500 rounded-2xl p-6 text-white shadow-lg">
+        <div class="text-sm opacity-80">💰 Revenus totaux</div>
+        <div id="rev-total" class="text-3xl font-bold mt-2">0 DH</div>
+        <div class="mt-4 pt-4 border-t border-white/20 space-y-2 text-sm">
+          <div class="flex justify-between"><span class="opacity-80">Ce mois</span><span id="rev-month" class="font-semibold">0 DH</span></div>
+          <div class="flex justify-between"><span class="opacity-80">Aujourd'hui</span><span id="rev-today" class="font-semibold">0 DH</span></div>
+          <div class="flex justify-between"><span class="opacity-80">Panier moyen</span><span id="rev-avg" class="font-semibold">0 DH</span></div>
+        </div>
+      </div>
+      
+      <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold">📊 Ventes des 7 derniers jours</h3>
+        </div>
+        <div id="chart-7days" class="h-48 flex items-end justify-between gap-2"></div>
+      </div>
+    </div>
+
+    <!-- RECENT ORDERS -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold">🕐 Commandes récentes</h3>
+        <button onclick="document.querySelector('[data-tab=orders]').click()" class="text-sm text-blue-600 hover:text-blue-700 font-semibold">Voir tout →</button>
+      </div>
+      <div id="recent-orders" class="space-y-2"></div>
+    </div>
+
+    <!-- LOW STOCK + QUICK ACTIONS -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="bg-white rounded-2xl p-6 shadow-sm border">
+        <h3 class="font-bold mb-4">⚠️ Alerte stock faible</h3>
+        <div id="low-stock"></div>
+      </div>
+      
+      <div class="bg-white rounded-2xl p-6 shadow-sm border">
+        <h3 class="font-bold mb-4">⚡ Actions rapides</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="openProductModal()" class="p-4 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-left transition">
+            <div class="text-2xl mb-1">➕</div>
+            <div class="text-sm">Nouveau produit</div>
+          </button>
+          <button onclick="openCategoryModal()" class="p-4 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold text-left transition">
+            <div class="text-2xl mb-1">🏷️</div>
+            <div class="text-sm">Nouvelle catégorie</div>
+          </button>
+          <button onclick="document.querySelector('[data-tab=orders]').click()" class="p-4 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold text-left transition">
+            <div class="text-2xl mb-1">📋</div>
+            <div class="text-sm">Voir commandes</div>
+          </button>
+          <a href="index.html" target="_blank" class="p-4 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold text-left transition block">
+            <div class="text-2xl mb-1">👁️</div>
+            <div class="text-sm">Voir le site</div>
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -147,7 +229,6 @@
       <p class="text-sm text-slate-500">Total affiché: <span id="ordersCount" class="font-bold text-slate-800">0</span> commande(s)</p>
     </div>
 
-    <!-- 🔍 SEARCH + FILTER -->
     <div class="bg-white rounded-2xl shadow-sm border p-4 mb-4 grid grid-cols-1 md:grid-cols-3 gap-3">
       <div class="md:col-span-2 relative">
         <input id="searchOrder" type="text" placeholder="🔍 Rechercher par nom ou téléphone..."
@@ -157,7 +238,6 @@
       <button onclick="clearOrderFilters()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-semibold text-sm">✕ Effacer</button>
     </div>
 
-    <!-- FILTRES PAR STATUT -->
     <div class="flex flex-wrap gap-2 mb-4">
       <button onclick="setStatusFilter('all')" data-status="all" class="status-filter px-4 py-2 rounded-full text-sm font-semibold transition bg-blue-600 text-white shadow-md">
         📋 Toutes (<span id="countAll">0</span>)
@@ -309,7 +389,7 @@
   <div class="bg-slate-900 text-white px-5 py-3 rounded-full shadow-2xl text-sm font-medium" id="toastMsg">OK</div>
 </div>
 
-<!-- 🖨️ ZONE D'IMPRESSION (cachée, devient visible uniquement à l'impression) -->
+<!-- 🖨️ ZONE D'IMPRESSION -->
 <div id="printArea" style="display:none;"></div>
 
 <script>
@@ -431,11 +511,132 @@ async function loadAll() {
   fillCategoryFilter();
 }
 
+// ============ DASHBOARD STATS ============
 function renderStats() {
   document.getElementById('stat-products').textContent = products.length;
   document.getElementById('stat-categories').textContent = categories.length;
   document.getElementById('stat-orders').textContent = orders.length;
   document.getElementById('stat-pending').textContent = orders.filter(o => o.status === 'pending').length;
+
+  const validOrders = orders.filter(o => o.status !== 'cancelled');
+  const total = validOrders.reduce((s, o) => s + (Number(o.total) || 0), 0);
+  
+  const now = new Date();
+  const monthRevenue = validOrders.filter(o => {
+    const d = new Date(o.created_at);
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }).reduce((s, o) => s + (Number(o.total) || 0), 0);
+  
+  const todayRevenue = validOrders.filter(o => {
+    const d = new Date(o.created_at);
+    return d.toDateString() === now.toDateString();
+  }).reduce((s, o) => s + (Number(o.total) || 0), 0);
+  
+  const avg = validOrders.length > 0 ? total / validOrders.length : 0;
+  
+  document.getElementById('rev-total').textContent = total.toFixed(0) + ' DH';
+  document.getElementById('rev-month').textContent = monthRevenue.toFixed(0) + ' DH';
+  document.getElementById('rev-today').textContent = todayRevenue.toFixed(0) + ' DH';
+  document.getElementById('rev-avg').textContent = avg.toFixed(0) + ' DH';
+
+  renderChart7Days();
+  renderRecentOrders();
+  renderLowStock();
+}
+
+function renderChart7Days() {
+  const days = [];
+  const revenues = [];
+  const now = new Date();
+  
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    days.push(d.toLocaleDateString('fr-FR', { weekday: 'short' }));
+    
+    const dayRevenue = orders.filter(o => {
+      const od = new Date(o.created_at);
+      return od.toDateString() === d.toDateString() && o.status !== 'cancelled';
+    }).reduce((s, o) => s + (Number(o.total) || 0), 0);
+    revenues.push(dayRevenue);
+  }
+  
+  const max = Math.max(...revenues, 1);
+  const chart = document.getElementById('chart-7days');
+  chart.innerHTML = days.map((day, i) => {
+    const height = revenues[i] > 0 ? Math.max((revenues[i] / max) * 100, 5) : 0;
+    return `
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <div class="text-xs font-semibold text-slate-600 h-4">${revenues[i] > 0 ? revenues[i].toFixed(0) : ''}</div>
+        <div class="w-full bg-slate-100 rounded-t-lg relative" style="height: 130px">
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-blue-600 to-teal-400 rounded-t-lg transition-all duration-500" style="height: ${height}%"></div>
+        </div>
+        <div class="text-xs text-slate-500 capitalize">${day}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderRecentOrders() {
+  const container = document.getElementById('recent-orders');
+  const recent = orders.slice(0, 5);
+  
+  if (!recent.length) {
+    container.innerHTML = '<p class="text-center py-6 text-slate-400 text-sm">Aucune commande récente</p>';
+    return;
+  }
+  
+  const statusConfig = {
+    pending: { label: 'En attente', badge: 'bg-amber-100 text-amber-700' },
+    confirmed: { label: 'Confirmée', badge: 'bg-blue-100 text-blue-700' },
+    delivered: { label: 'Livrée', badge: 'bg-emerald-100 text-emerald-700' },
+    cancelled: { label: 'Annulée', badge: 'bg-rose-100 text-rose-700' }
+  };
+  
+  container.innerHTML = recent.map(o => {
+    const cfg = statusConfig[o.status] || statusConfig.pending;
+    return `
+      <div class="flex items-center justify-between gap-3 p-3 rounded-xl hover:bg-slate-50 transition cursor-pointer" onclick="document.querySelector('[data-tab=orders]').click()">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-bold text-sm">#${o.id}</span>
+            <span class="text-sm font-medium truncate">${o.customer_name}</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${cfg.badge}">${cfg.label}</span>
+          </div>
+          <div class="text-xs text-slate-500 mt-1">${o.city} · ${new Date(o.created_at).toLocaleDateString('fr-FR')}</div>
+        </div>
+        <div class="text-right">
+          <div class="font-bold text-blue-600">${o.total} DH</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderLowStock() {
+  const container = document.getElementById('low-stock');
+  const lowStock = products.filter(p => (p.stock || 0) <= 5).sort((a, b) => (a.stock || 0) - (b.stock || 0));
+  
+  if (!lowStock.length) {
+    container.innerHTML = '<p class="text-center py-6 text-slate-400 text-sm">✅ Tous les stocks sont OK</p>';
+    return;
+  }
+  
+  container.innerHTML = lowStock.slice(0, 5).map(p => {
+    const stock = p.stock || 0;
+    const color = stock === 0 ? 'bg-rose-50 text-rose-700' : 'bg-amber-50 text-amber-700';
+    const icon = stock === 0 ? '❌' : '⚠️';
+    return `
+      <div class="flex items-center gap-3 p-3 rounded-xl ${color}">
+        <span class="text-lg">${icon}</span>
+        <div class="flex-1 min-w-0">
+          <div class="font-medium text-sm truncate">${p.name}</div>
+          <div class="text-xs opacity-80">Stock: ${stock}</div>
+        </div>
+        <button onclick="editProduct(${p.id})" class="px-3 py-1.5 rounded-lg bg-white/60 hover:bg-white text-xs font-semibold">Modifier</button>
+      </div>
+    `;
+  }).join('');
 }
 
 // ============ PRODUCTS ============
@@ -747,18 +948,14 @@ function renderOrders() {
   const list = document.getElementById('orders-list');
   const empty = document.getElementById('orders-empty');
 
-  // Compteurs
   document.getElementById('countAll').textContent = orders.length;
   document.getElementById('countPending').textContent = orders.filter(o => o.status === 'pending').length;
   document.getElementById('countConfirmed').textContent = orders.filter(o => o.status === 'confirmed').length;
   document.getElementById('countDelivered').textContent = orders.filter(o => o.status === 'delivered').length;
   document.getElementById('countCancelled').textContent = orders.filter(o => o.status === 'cancelled').length;
 
-  // Filtrer
   let filtered = orders;
-  if (statusFilter !== 'all') {
-    filtered = filtered.filter(o => o.status === statusFilter);
-  }
+  if (statusFilter !== 'all') filtered = filtered.filter(o => o.status === statusFilter);
   if (orderSearch) {
     filtered = filtered.filter(o =>
       (o.customer_name || '').toLowerCase().includes(orderSearch) ||
@@ -776,10 +973,10 @@ function renderOrders() {
   empty.classList.add('hidden');
 
   const statusConfig = {
-    pending: { label: '⏳ En attente', color: 'amber', border: 'border-l-amber-500', badge: 'bg-amber-100 text-amber-700' },
-    confirmed: { label: '✅ Confirmée', color: 'blue', border: 'border-l-blue-500', badge: 'bg-blue-100 text-blue-700' },
-    delivered: { label: '📦 Livrée', color: 'emerald', border: 'border-l-emerald-500', badge: 'bg-emerald-100 text-emerald-700' },
-    cancelled: { label: '❌ Annulée', color: 'rose', border: 'border-l-rose-500', badge: 'bg-rose-100 text-rose-700' }
+    pending: { label: '⏳ En attente', border: 'border-l-amber-500', badge: 'bg-amber-100 text-amber-700' },
+    confirmed: { label: '✅ Confirmée', border: 'border-l-blue-500', badge: 'bg-blue-100 text-blue-700' },
+    delivered: { label: '📦 Livrée', border: 'border-l-emerald-500', badge: 'bg-emerald-100 text-emerald-700' },
+    cancelled: { label: '❌ Annulée', border: 'border-l-rose-500', badge: 'bg-rose-100 text-rose-700' }
   };
 
   list.innerHTML = filtered.map(o => {
@@ -855,8 +1052,6 @@ function printOrder(id) {
 
   const printContent = `
     <div style="max-width:800px;margin:0 auto;font-family:Arial,sans-serif;color:#0f172a">
-      
-      <!-- HEADER -->
       <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #0082cd;padding-bottom:20px;margin-bottom:30px">
         <div>
           <h1 style="margin:0;font-size:32px;color:#0082cd">NathalMedic</h1>
@@ -868,37 +1063,22 @@ function printOrder(id) {
         </div>
       </div>
 
-      <!-- FACTURE TITLE -->
       <div style="text-align:center;margin-bottom:30px">
         <h2 style="margin:0;font-size:24px;color:#0f172a">FACTURE</h2>
         <p style="margin:5px 0 0;color:#64748b;font-size:14px">N° ${String(o.id).padStart(5, '0')} — ${new Date(o.created_at).toLocaleDateString('fr-FR')}</p>
       </div>
 
-      <!-- INFOS CLIENT -->
       <div style="background:#f8fafc;border-radius:12px;padding:20px;margin-bottom:30px">
         <h3 style="margin:0 0 12px;font-size:14px;color:#0082cd;text-transform:uppercase;letter-spacing:1px">Informations client</h3>
         <table style="width:100%;font-size:14px;line-height:1.8">
-          <tr>
-            <td style="width:120px;color:#64748b">Nom:</td>
-            <td style="font-weight:bold">${o.customer_name}</td>
-          </tr>
-          <tr>
-            <td style="color:#64748b">Téléphone:</td>
-            <td>${o.phone}</td>
-          </tr>
-          <tr>
-            <td style="color:#64748b">Ville:</td>
-            <td>${o.city}</td>
-          </tr>
-          <tr>
-            <td style="color:#64748b;vertical-align:top">Adresse:</td>
-            <td>${o.address}</td>
-          </tr>
+          <tr><td style="width:120px;color:#64748b">Nom:</td><td style="font-weight:bold">${o.customer_name}</td></tr>
+          <tr><td style="color:#64748b">Téléphone:</td><td>${o.phone}</td></tr>
+          <tr><td style="color:#64748b">Ville:</td><td>${o.city}</td></tr>
+          <tr><td style="color:#64748b;vertical-align:top">Adresse:</td><td>${o.address}</td></tr>
           ${o.note ? `<tr><td style="color:#64748b;vertical-align:top">Note:</td><td>${o.note}</td></tr>` : ''}
         </table>
       </div>
 
-      <!-- PRODUITS -->
       <h3 style="font-size:14px;color:#0082cd;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Détails de la commande</h3>
       <table style="width:100%;border-collapse:collapse;font-size:14px">
         <thead>
@@ -910,22 +1090,13 @@ function printOrder(id) {
             <th style="padding:10px;text-align:right;width:100px">Total</th>
           </tr>
         </thead>
-        <tbody>
-          ${produitsHtml}
-        </tbody>
+        <tbody>${produitsHtml}</tbody>
       </table>
 
-      <!-- TOTAUX -->
       <div style="margin-top:20px;display:flex;justify-content:flex-end">
         <table style="font-size:14px;min-width:280px">
-          <tr>
-            <td style="padding:8px;color:#64748b">Sous-total:</td>
-            <td style="padding:8px;text-align:right;font-weight:600">${sub} DH</td>
-          </tr>
-          <tr>
-            <td style="padding:8px;color:#64748b">Livraison:</td>
-            <td style="padding:8px;text-align:right;font-weight:600">${ship === 0 ? 'Gratuite' : ship + ' DH'}</td>
-          </tr>
+          <tr><td style="padding:8px;color:#64748b">Sous-total:</td><td style="padding:8px;text-align:right;font-weight:600">${sub} DH</td></tr>
+          <tr><td style="padding:8px;color:#64748b">Livraison:</td><td style="padding:8px;text-align:right;font-weight:600">${ship === 0 ? 'Gratuite' : ship + ' DH'}</td></tr>
           <tr style="border-top:2px solid #0082cd">
             <td style="padding:12px 8px;font-weight:bold;font-size:16px">TOTAL:</td>
             <td style="padding:12px 8px;text-align:right;font-weight:bold;font-size:18px;color:#0082cd">${total} DH</td>
@@ -933,21 +1104,17 @@ function printOrder(id) {
         </table>
       </div>
 
-      <!-- FOOTER -->
       <div style="margin-top:50px;padding-top:20px;border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8">
         <p style="margin:0">Merci pour votre confiance — NathalMedic © ${new Date().getFullYear()}</p>
         <p style="margin:5px 0 0">Paiement à la livraison · Livraison gratuite dès 500 DH</p>
       </div>
-
     </div>
   `;
 
   const printArea = document.getElementById('printArea');
   printArea.innerHTML = printContent;
   printArea.style.display = 'block';
-  
   window.print();
-  
   setTimeout(() => {
     printArea.style.display = 'none';
     printArea.innerHTML = '';
