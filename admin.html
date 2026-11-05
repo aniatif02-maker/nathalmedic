@@ -55,6 +55,7 @@
     <button data-tab="categories" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-blue-600 whitespace-nowrap">🏷️ Catégories</button>
     <button data-tab="orders" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-blue-600 whitespace-nowrap">📋 Commandes Clients</button>
     <button data-tab="supplier-orders" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-blue-600 whitespace-nowrap">🛒 Bons Fournisseurs</button>
+    <button data-tab="delivery-notes" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-blue-600 whitespace-nowrap">🚚 Bons de Livraison</button>
   </div>
 </nav>
 
@@ -345,6 +346,84 @@
     </div>
   </section>
 
+  <!-- ============ DELIVERY NOTES (BONS DE LIVRAISON) ============ -->
+  <section id="tab-delivery-notes" class="tab-content hidden no-print">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+      <div>
+        <h2 class="text-2xl font-bold text-slate-800">Bons de livraison</h2>
+        <p class="text-sm text-slate-500 mt-1">Préparez les bons pour vos livreurs avec les frais de livraison.</p>
+      </div>
+      <button onclick="resetDeliveryNote()" class="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-semibold">＋ Nouveau bon</button>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+      <!-- Client Info -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
+        <h3 class="font-bold">Informations Client</h3>
+
+        <input id="dlv-client-name" placeholder="Nom du client" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 outline-none transition">
+        <input id="dlv-client-phone" placeholder="Téléphone" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 outline-none transition">
+        <input id="dlv-client-address" placeholder="Adresse de livraison" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 outline-none transition">
+
+        <div class="grid grid-cols-2 gap-3">
+          <input id="dlv-city" value="Tanger" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 outline-none transition">
+          <input id="dlv-date" type="date" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 outline-none transition">
+        </div>
+
+        <input id="dlv-number" readonly class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-slate-500 outline-none">
+        
+        <div>
+          <label class="block text-sm font-semibold mb-1.5 text-slate-700">Frais de livraison (DH)</label>
+          <input id="dlv-shipping-fee" type="number" value="0" min="0" step="0.01" oninput="updateDeliveryTotal()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 outline-none transition font-bold text-blue-700">
+        </div>
+      </div>
+
+      <!-- Products & Totals -->
+      <div class="xl:col-span-2 bg-white rounded-2xl border border-slate-200 p-5">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="font-bold">Produits à livrer</h3>
+          <button onclick="addDeliveryLine()" class="px-3 py-2 rounded-lg bg-blue-50 text-blue-700 font-bold hover:bg-blue-100 transition">
+            ＋ Ajouter un produit
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm min-w-[650px]">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="p-3 text-left">Désignation</th>
+                <th class="p-3 text-left">Quantité</th>
+                <th class="p-3 text-left">Prix unitaire (DH)</th>
+                <th class="p-3 text-right">Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="dlv-lines"></tbody>
+          </table>
+        </div>
+
+        <div class="text-right mt-5 space-y-2">
+          <div class="flex justify-between items-center text-sm text-slate-600">
+            <span>Total produits</span>
+            <span id="dlv-subtotal" class="font-bold text-slate-800">0,00 DH</span>
+          </div>
+          <div class="flex justify-between items-center text-sm text-slate-600">
+            <span>Frais de livraison</span>
+            <span id="dlv-shipping-display" class="font-bold text-slate-800">0,00 DH</span>
+          </div>
+          <div class="flex justify-between items-center pt-2 border-t border-slate-200">
+            <span class="text-sm font-bold text-slate-800">Total à payer</span>
+            <span id="dlv-total" class="text-2xl font-extrabold text-blue-700">0,00 DH</span>
+          </div>
+        </div>
+
+        <button onclick="generateDeliveryNote()" class="mt-6 px-5 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition shadow-md">
+          🖨️ Générer le bon de livraison
+        </button>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <!-- ============ MODAL: DELETE ORDER (OTP) ============ -->
@@ -556,6 +635,10 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     // Initialize Supplier Orders when tab is clicked
     if (btn.dataset.tab === 'supplier-orders') {
       initSupplierPurchaseOrders();
+    }
+    // Initialize Delivery Notes when tab is clicked
+    if (btn.dataset.tab === 'delivery-notes') {
+      initDeliveryNote();
     }
   };
 });
@@ -1398,7 +1481,6 @@ function savePurchaseSupplier() {
   alert('تم حفظ المورد');
 }
 
-// ============ MODIFIED: Add Purchase Line ============
 function addPurchaseLine(name = '', qty = 1, price = '') {
   const tr = document.createElement('tr');
   tr.className = 'border-t border-slate-200';
@@ -1575,6 +1657,214 @@ function initSupplierPurchaseOrders() {
   if (!document.querySelector('#po-lines tr')) {
     addPurchaseLine();
   }
+}
+
+// ============ DELIVERY NOTES LOGIC ============
+const DLV_COUNTER_KEY = 'nathalMedicDeliveryCounter';
+
+function dlvNextNumber() {
+  const count = Number(localStorage.getItem(DLV_COUNTER_KEY) || 0) + 1;
+  localStorage.setItem(DLV_COUNTER_KEY, String(count));
+  return `BL-${new Date().getFullYear()}-${String(count).padStart(3,'0')}`;
+}
+
+function initDeliveryNote() {
+  const date = document.getElementById('dlv-date');
+  if (!date) return;
+  if (!date.value) date.value = poTodayISO();
+  if (!document.getElementById('dlv-number').value) {
+    document.getElementById('dlv-number').value = dlvNextNumber();
+  }
+  if (!document.querySelector('#dlv-lines tr')) {
+    addDeliveryLine();
+  }
+}
+
+function addDeliveryLine(name = '', qty = 1, price = '') {
+  const tr = document.createElement('tr');
+  tr.className = 'border-t border-slate-200';
+
+  tr.innerHTML = `
+    <td class="p-2">
+      <input class="dlv-name w-full p-2.5 border border-slate-300 rounded-lg focus:border-blue-500 outline-none transition" 
+        placeholder="Désignation du produit" value="${poEscape(name)}">
+    </td>
+    <td class="p-2">
+      <input class="dlv-qty w-24 p-2.5 border border-slate-300 rounded-lg focus:border-blue-500 outline-none transition" 
+        type="number" min="1" step="1" value="${qty}" oninput="updateDeliveryTotal()">
+    </td>
+    <td class="p-2">
+      <input class="dlv-price w-28 p-2.5 border border-slate-300 rounded-lg focus:border-blue-500 outline-none transition" 
+        type="number" min="0" step="0.01" placeholder="0.00" value="${price}" oninput="updateDeliveryTotal()">
+    </td>
+    <td class="p-2 text-right dlv-line-total font-semibold text-slate-700">0,00 DH</td>
+    <td class="p-2 text-center">
+      <button type="button" onclick="this.closest('tr').remove();updateDeliveryTotal()" class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg>
+      </button>
+    </td>
+  `;
+
+  document.getElementById('dlv-lines').appendChild(tr);
+  updateDeliveryTotal();
+}
+
+function dlvReadLines() {
+  return [...document.querySelectorAll('#dlv-lines tr')].map(row => ({
+    name: row.querySelector('.dlv-name').value.trim(),
+    qty: Number(row.querySelector('.dlv-qty').value) || 0,
+    price: Number(row.querySelector('.dlv-price').value) || 0
+  })).filter(x => x.name && x.qty > 0);
+}
+
+function updateDeliveryTotal() {
+  let subtotal = 0;
+
+  document.querySelectorAll('#dlv-lines tr').forEach(row => {
+    const qty = Number(row.querySelector('.dlv-qty').value) || 0;
+    const price = Number(row.querySelector('.dlv-price').value) || 0;
+    const lineTotal = qty * price;
+    subtotal += lineTotal;
+
+    row.querySelector('.dlv-line-total').textContent =
+      lineTotal.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' DH';
+  });
+
+  const shipFee = Number(document.getElementById('dlv-shipping-fee').value) || 0;
+  const total = subtotal + shipFee;
+
+  document.getElementById('dlv-subtotal').textContent = subtotal.toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' DH';
+  document.getElementById('dlv-shipping-display').textContent = shipFee.toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' DH';
+  document.getElementById('dlv-total').textContent = total.toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' DH';
+}
+
+function resetDeliveryNote() {
+  document.getElementById('dlv-client-name').value = '';
+  document.getElementById('dlv-client-phone').value = '';
+  document.getElementById('dlv-client-address').value = '';
+  document.getElementById('dlv-city').value = 'Tanger';
+  document.getElementById('dlv-date').value = poTodayISO();
+  document.getElementById('dlv-number').value = dlvNextNumber();
+  document.getElementById('dlv-shipping-fee').value = 0;
+  document.getElementById('dlv-lines').innerHTML = '';
+  addDeliveryLine();
+  updateDeliveryTotal();
+}
+
+function generateDeliveryNote() {
+  const client = document.getElementById('dlv-client-name').value.trim();
+  const phone = document.getElementById('dlv-client-phone').value.trim();
+  const address = document.getElementById('dlv-client-address').value.trim();
+  const city = document.getElementById('dlv-city').value || 'Tanger';
+  const date = poFormatDate(document.getElementById('dlv-date').value);
+  const number = document.getElementById('dlv-number').value;
+  const shipFee = Number(document.getElementById('dlv-shipping-fee').value) || 0;
+  const lines = dlvReadLines();
+
+  if (!client) return alert('أدخل اسم الزبون');
+  if (!lines.length) return alert('أضف منتجاً واحداً على الأقل');
+
+  let subtotal = 0;
+  const rows = lines.map(line => {
+    const lineTotal = line.qty * line.price;
+    subtotal += lineTotal;
+    return `
+      <tr>
+        <td>${poEscape(line.name)}</td>
+        <td>${line.qty} U</td>
+        <td>${line.price.toFixed(2)} DH</td>
+        <td style="text-align:right">${lineTotal.toFixed(2)} DH</td>
+      </tr>
+    `;
+  }).join('');
+
+  const total = subtotal + shipFee;
+
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) return alert('يرجى السماح بالنوافذ المنبثقة');
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+      <meta charset="UTF-8">
+      <title>Bon de Livraison ${poEscape(number)}</title>
+      <style>
+        body{font-family:Arial,sans-serif;color:#20252b;padding:35px}
+        .head{display:flex;justify-content:space-between}
+        .logo{font-size:30px;font-weight:bold}
+        .nt{color:#258c91}
+        .tag{font-size:12px;font-weight:bold;margin-top:8px;line-height:1.6}
+        .legal{font-size:13px;font-weight:bold;line-height:1.8;margin-top:8px}
+        .date{text-align:right;margin-top:30px;font-style:italic}
+        h2{text-align:center;margin:35px 0;font-family:Georgia,serif;font-style:italic;text-decoration:underline}
+        .details{line-height:2;margin-bottom:30px}
+        table{width:100%;border-collapse:collapse}
+        th,td{border:1px solid #555;padding:12px}
+        th{text-decoration:underline;font-style:italic}
+        th:nth-child(2),th:nth-child(3),td:nth-child(2),td:nth-child(3){text-align:center}
+        th:nth-child(4),td:nth-child(4){text-align:right}
+        .totals{width:50%;margin-left:auto;margin-top:20px}
+        .totals td{border:none;padding:8px}
+        .totals tr:last-child td{border-top:2px solid #555;font-weight:bold;font-size:18px}
+        .signature{display:flex;justify-content:space-between;margin-top:55px}
+        .signature div{width:45%;text-align:center;font-weight:bold;text-decoration:underline}
+        @page{size:A4;margin:15mm}
+      </style>
+    </head>
+    <body>
+      <div class="head">
+        <div>
+          <div class="logo">N<span class="nt">T</span> NATHAL <span class="nt">MEDIC</span></div>
+          <div class="tag">VENTE DE TOUS PRODUITS ET FOURNITURES<br>PARAMÉDICAUX</div>
+          <div class="legal">ICE : 003593467000059<br>IF : 66100128<br>Patente : 57231718</div>
+        </div>
+        <div>${poEscape(number)}</div>
+      </div>
+      <div class="date">${poEscape(city)}, le ${poEscape(date)}</div>
+      <h2>BON DE LIVRAISON</h2>
+      <div class="details">
+        <strong>Destinataire :</strong> ${poEscape(client)}<br>
+        <strong>Adresse :</strong> ${poEscape(address)}<br>
+        <strong>Téléphone :</strong> ${poEscape(phone)}
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Désignation</th>
+            <th>QUANTITÉ</th>
+            <th>PRIX U.</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+      
+      <table class="totals">
+        <tr>
+          <td>Sous-total :</td>
+          <td>${subtotal.toFixed(2)} DH</td>
+        </tr>
+        <tr>
+          <td>Frais de livraison :</td>
+          <td>${shipFee.toFixed(2)} DH</td>
+        </tr>
+        <tr>
+          <td>TOTAL À PAYER :</td>
+          <td>${total.toFixed(2)} DH</td>
+        </tr>
+      </table>
+
+      <div class="signature">
+        <div>Signature du Client</div>
+        <div>Cachet & Signature NATHAL MEDIC</div>
+      </div>
+      <script>window.onload=()=>window.print();<\/script>
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
 }
 
 // ============ INIT ============
