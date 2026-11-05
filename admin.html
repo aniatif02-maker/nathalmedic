@@ -53,7 +53,8 @@
     <button data-tab="dashboard" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-blue-600 text-blue-600 whitespace-nowrap">📊 Dashboard</button>
     <button data-tab="products" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-blue-600 whitespace-nowrap">📦 Produits</button>
     <button data-tab="categories" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-blue-600 whitespace-nowrap">🏷️ Catégories</button>
-    <button data-tab="orders" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-blue-600 whitespace-nowrap">📋 Commandes</button>
+    <button data-tab="orders" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-blue-600 whitespace-nowrap">📋 Commandes Clients</button>
+    <button data-tab="supplier-orders" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-blue-600 whitespace-nowrap">🛒 Bons Fournisseurs</button>
   </div>
 </nav>
 
@@ -274,6 +275,76 @@
     </div>
   </section>
 
+  <!-- ============ SUPPLIER PURCHASE ORDERS (NEW) ============ -->
+  <section id="tab-supplier-orders" class="tab-content hidden no-print">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+      <div>
+        <h2 class="text-2xl font-bold text-slate-800">Bons de commande fournisseurs</h2>
+        <p class="text-sm text-slate-500 mt-1">Préparez vos achats fournisseurs à partir du catalogue NathalMedic.</p>
+      </div>
+      <button onclick="resetSupplierOrder()" class="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-semibold">＋ Nouveau bon</button>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
+        <h3 class="font-bold">Informations du fournisseur</h3>
+
+        <select id="po-supplier-select" onchange="loadPurchaseSupplier()" class="w-full px-3 py-2.5 rounded-xl border">
+          <option value="">— Choisir un fournisseur —</option>
+        </select>
+
+        <input id="po-supplier-name" placeholder="Société fournisseur" class="w-full px-3 py-2.5 rounded-xl border">
+        <input id="po-client" value="NATHAL MEDIC" class="w-full px-3 py-2.5 rounded-xl border">
+        <input id="po-address" placeholder="Adresse du fournisseur" class="w-full px-3 py-2.5 rounded-xl border">
+        <input id="po-phone" placeholder="Téléphone" class="w-full px-3 py-2.5 rounded-xl border">
+
+        <div class="grid grid-cols-2 gap-3">
+          <input id="po-city" value="Tanger" class="w-full px-3 py-2.5 rounded-xl border">
+          <input id="po-date" type="date" class="w-full px-3 py-2.5 rounded-xl border">
+        </div>
+
+        <input id="po-number" readonly class="w-full px-3 py-2.5 rounded-xl border bg-slate-50">
+
+        <button onclick="savePurchaseSupplier()" class="w-full px-4 py-2.5 rounded-xl bg-teal-50 text-teal-700 font-bold">
+          💾 Enregistrer ce fournisseur
+        </button>
+      </div>
+
+      <div class="xl:col-span-2 bg-white rounded-2xl border border-slate-200 p-5">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="font-bold">Produits à commander</h3>
+          <button onclick="addPurchaseLine()" class="px-3 py-2 rounded-lg bg-blue-50 text-blue-700 font-bold">
+            ＋ Ajouter une ligne
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm min-w-[650px]">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="p-3 text-left">Produit</th>
+                <th class="p-3 text-left">Quantité</th>
+                <th class="p-3 text-left">Prix unitaire (DH)</th>
+                <th class="p-3 text-right">Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="po-lines"></tbody>
+          </table>
+        </div>
+
+        <div class="text-right mt-5">
+          <span class="text-sm text-slate-500">Total estimé</span>
+          <div id="po-total" class="text-2xl font-extrabold text-blue-700">0,00 DH</div>
+        </div>
+
+        <button onclick="generateSupplierPurchaseOrder()" class="mt-6 px-5 py-3 rounded-xl bg-blue-600 text-white font-bold">
+          🖨️ Générer le bon / PDF
+        </button>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <!-- ============ MODAL: DELETE ORDER (OTP) ============ -->
@@ -481,6 +552,11 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.classList.remove('border-transparent','text-slate-600');
     document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
     document.getElementById('tab-' + btn.dataset.tab).classList.remove('hidden');
+    
+    // Initialize Supplier Orders when tab is clicked
+    if (btn.dataset.tab === 'supplier-orders') {
+      initSupplierPurchaseOrders();
+    }
   };
 });
 
@@ -1152,7 +1228,7 @@ async function confirmDeleteOrder() {
   await loadAll();
 }
 
-// ============ 🖨️ PRINT ORDER ============
+// ============ 🖨️ PRINT ORDER (CLIENT) ============
 function printOrder(id) {
   const o = orders.find(x => x.id === id);
   if (!o) return;
@@ -1241,6 +1317,290 @@ function printOrder(id) {
     printArea.style.display = 'none';
     printArea.innerHTML = '';
   }, 500);
+}
+
+// ============ SUPPLIER PURCHASE ORDERS LOGIC ============
+const PO_SUPPLIERS_KEY = 'nathalMedicPurchaseSuppliers';
+const PO_COUNTER_KEY = 'nathalMedicPurchaseOrderCounter';
+
+function poEscape(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;',
+    '"':'&quot;', "'":'&#39;'
+  }[ch]));
+}
+
+function poTodayISO() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function poFormatDate(value) {
+  if (!value) return '';
+  const [y,m,d] = value.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+function poNextNumber() {
+  const count = Number(localStorage.getItem(PO_COUNTER_KEY) || 0) + 1;
+  localStorage.setItem(PO_COUNTER_KEY, String(count));
+  return `BC-${new Date().getFullYear()}-${String(count).padStart(3,'0')}`;
+}
+
+function poGetSuppliers() {
+  try {
+    return JSON.parse(localStorage.getItem(PO_SUPPLIERS_KEY) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function poRefreshSuppliers(selected = '') {
+  const select = document.getElementById('po-supplier-select');
+  select.innerHTML = '<option value="">— Choisir un fournisseur —</option>' +
+    poGetSuppliers().map((s,i) =>
+      `<option value="${i}">${poEscape(s.name)}</option>`
+    ).join('');
+  select.value = selected;
+}
+
+function loadPurchaseSupplier() {
+  const index = document.getElementById('po-supplier-select').value;
+  if (index === '') return;
+
+  const s = poGetSuppliers()[Number(index)];
+  if (!s) return;
+
+  document.getElementById('po-supplier-name').value = s.name || '';
+  document.getElementById('po-address').value = s.address || '';
+  document.getElementById('po-phone').value = s.phone || '';
+}
+
+function savePurchaseSupplier() {
+  const s = {
+    name: document.getElementById('po-supplier-name').value.trim(),
+    address: document.getElementById('po-address').value.trim(),
+    phone: document.getElementById('po-phone').value.trim()
+  };
+
+  if (!s.name) return alert('أدخل اسم المورد');
+
+  const list = poGetSuppliers();
+  const index = list.findIndex(x =>
+    x.name.toLowerCase() === s.name.toLowerCase()
+  );
+
+  if (index >= 0) list[index] = s;
+  else list.push(s);
+
+  localStorage.setItem(PO_SUPPLIERS_KEY, JSON.stringify(list));
+  poRefreshSuppliers(String(index >= 0 ? index : list.length - 1));
+  alert('تم حفظ المورد');
+}
+
+function poProductOptions(selectedId = '') {
+  return '<option value="">— اختر منتجاً —</option>' +
+    products.map(p =>
+      `<option value="${poEscape(p.id)}" ${String(p.id) === String(selectedId) ? 'selected' : ''}>${poEscape(p.name)}</option>`
+    ).join('');
+}
+
+function addPurchaseLine(name = '', qty = 1, price = '', productId = '') {
+  const tr = document.createElement('tr');
+  tr.className = 'border-t';
+
+  tr.innerHTML = `
+    <td class="p-2">
+      <select class="po-product w-full p-2 border rounded mb-1"
+        onchange="poSelectProduct(this)">
+        ${poProductOptions(productId)}
+      </select>
+      <input class="po-name w-full p-2 border rounded"
+        placeholder="Désignation" value="${poEscape(name)}"
+        oninput="updatePurchaseTotal()">
+    </td>
+    <td class="p-2">
+      <input class="po-qty w-24 p-2 border rounded"
+        type="number" min="0.01" step="0.01"
+        value="${qty}" oninput="updatePurchaseTotal()">
+    </td>
+    <td class="p-2">
+      <input class="po-price w-28 p-2 border rounded"
+        type="number" min="0" step="0.01"
+        value="${price}" oninput="updatePurchaseTotal()">
+    </td>
+    <td class="p-2 text-right po-line-total">0,00 DH</td>
+    <td class="p-2">
+      <button onclick="this.closest('tr').remove();updatePurchaseTotal()"
+        class="text-red-600">×</button>
+    </td>
+  `;
+
+  document.getElementById('po-lines').appendChild(tr);
+  updatePurchaseTotal();
+}
+
+function poSelectProduct(select) {
+  const product = products.find(p => String(p.id) === String(select.value));
+  if (!product) return;
+
+  const row = select.closest('tr');
+  row.querySelector('.po-name').value = product.name || '';
+
+  if (!row.querySelector('.po-price').value) {
+    row.querySelector('.po-price').value = Number(product.price || 0);
+  }
+
+  updatePurchaseTotal();
+}
+
+function poReadLines() {
+  return [...document.querySelectorAll('#po-lines tr')].map(row => ({
+    name: row.querySelector('.po-name').value.trim(),
+    qty: Number(row.querySelector('.po-qty').value) || 0,
+    price: Number(row.querySelector('.po-price').value) || 0
+  })).filter(x => x.name && x.qty > 0);
+}
+
+function updatePurchaseTotal() {
+  let total = 0;
+
+  document.querySelectorAll('#po-lines tr').forEach(row => {
+    const qty = Number(row.querySelector('.po-qty').value) || 0;
+    const price = Number(row.querySelector('.po-price').value) || 0;
+    const lineTotal = qty * price;
+    total += lineTotal;
+
+    row.querySelector('.po-line-total').textContent =
+      lineTotal.toLocaleString('fr-FR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }) + ' DH';
+  });
+
+  document.getElementById('po-total').textContent =
+    total.toLocaleString('fr-FR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }) + ' DH';
+}
+
+function resetSupplierOrder() {
+  document.getElementById('po-supplier-select').value = '';
+  document.getElementById('po-supplier-name').value = '';
+  document.getElementById('po-client').value = 'NATHAL MEDIC';
+  document.getElementById('po-address').value = '';
+  document.getElementById('po-phone').value = '';
+  document.getElementById('po-city').value = 'Tanger';
+  document.getElementById('po-date').value = poTodayISO();
+  document.getElementById('po-number').value = poNextNumber();
+  document.getElementById('po-lines').innerHTML = '';
+  addPurchaseLine();
+}
+
+function generateSupplierPurchaseOrder() {
+  const supplier = document.getElementById('po-supplier-name').value.trim();
+  const lines = poReadLines();
+
+  if (!supplier) return alert('أدخل اسم المورد');
+  if (!lines.length) return alert('أضف منتجاً واحداً على الأقل');
+
+  const city = document.getElementById('po-city').value || 'Tanger';
+  const date = poFormatDate(document.getElementById('po-date').value);
+  const number = document.getElementById('po-number').value;
+  const client = document.getElementById('po-client').value || 'NATHAL MEDIC';
+  const address = document.getElementById('po-address').value || '—';
+  const phone = document.getElementById('po-phone').value || '—';
+
+  const rows = lines.map(line => `
+    <tr>
+      <td>${poEscape(line.name)}</td>
+      <td>${line.qty} U</td>
+      <td>${line.price.toFixed(2)} DH</td>
+    </tr>
+  `).join('');
+
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) return alert('يرجى السماح بالنوافذ المنبثقة');
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+      <meta charset="UTF-8">
+      <title>Bon de Commande ${poEscape(number)}</title>
+      <style>
+        body{font-family:Arial,sans-serif;color:#20252b;padding:35px}
+        .head{display:flex;justify-content:space-between}
+        .logo{font-size:30px;font-weight:bold}
+        .nt{color:#258c91}
+        .tag{font-size:12px;font-weight:bold;margin-top:8px;line-height:1.6}
+        .legal{font-size:13px;font-weight:bold;line-height:1.8;margin-top:8px}
+        .date{text-align:right;margin-top:30px;font-style:italic}
+        h2{text-align:center;margin:35px 0;font-family:Georgia,serif;font-style:italic;text-decoration:underline}
+        .details{line-height:2;margin-bottom:30px}
+        .salutation{font-family:Georgia,serif;font-style:italic;margin:25px 15px}
+        table{width:100%;border-collapse:collapse}
+        th,td{border:1px solid #555;padding:12px}
+        th{text-decoration:underline;font-style:italic}
+        th:nth-child(2),th:nth-child(3),td:nth-child(2),td:nth-child(3){text-align:center}
+        .closing{margin-top:55px;font-style:italic;line-height:1.8}
+        .signature{text-align:right;margin:55px 35px 0;font-weight:bold;text-decoration:underline}
+        @page{size:A4;margin:15mm}
+      </style>
+    </head>
+    <body>
+      <div class="head">
+        <div>
+          <div class="logo">N<span class="nt">T</span> NATHAL <span class="nt">MEDIC</span></div>
+          <div class="tag">VENTE DE TOUS PRODUITS ET FOURNITURES<br>PARAMÉDICAUX</div>
+          <div class="legal">ICE : 003593467000059<br>IF : 66100128<br>Patente : 57231718</div>
+        </div>
+        <div>${poEscape(number)}</div>
+      </div>
+      <div class="date">${poEscape(city)}, le ${poEscape(date)}</div>
+      <h2>BON COMMANDE</h2>
+      <div class="details">
+        Désignation : ${poEscape(supplier)}<br>
+        Nom client : ${poEscape(client)}<br>
+        Adresse : ${poEscape(address)}<br>
+        Téléphone : ${poEscape(phone)}
+      </div>
+      <div class="salutation">
+        Monsieur le Responsable,<br>
+        Nous avons le plaisir de vous confirmer notre commande comme suite :
+      </div>
+      <table>
+        <thead><tr><th>Désignation</th><th>QUANTITÉ</th><th>PRIX</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="closing">
+        © Nous vous en souhaitons bonne réception.<br>
+        Veuillez agréer l'expression de nos salutations les meilleures.
+      </div>
+      <div class="signature">NATHAL MEDIC</div>
+      <script>window.onload=()=>window.print();<\/script>
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+}
+
+function initSupplierPurchaseOrders() {
+  const date = document.getElementById('po-date');
+  if (!date) return;
+
+  if (!date.value) date.value = poTodayISO();
+  if (!document.getElementById('po-number').value) {
+    document.getElementById('po-number').value = poNextNumber();
+  }
+
+  poRefreshSuppliers();
+
+  if (!document.querySelector('#po-lines tr')) {
+    addPurchaseLine();
+  }
 }
 
 // ============ INIT ============
