@@ -275,12 +275,12 @@
     </div>
   </section>
 
-  <!-- ============ SUPPLIER PURCHASE ORDERS (NEW) ============ -->
+  <!-- ============ SUPPLIER PURCHASE ORDERS ============ -->
   <section id="tab-supplier-orders" class="tab-content hidden no-print">
     <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
       <div>
         <h2 class="text-2xl font-bold text-slate-800">Bons de commande fournisseurs</h2>
-        <p class="text-sm text-slate-500 mt-1">Préparez vos achats fournisseurs à partir du catalogue NathalMedic.</p>
+        <p class="text-sm text-slate-500 mt-1">Préparez vos achats fournisseurs manuellement.</p>
       </div>
       <button onclick="resetSupplierOrder()" class="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-semibold">＋ Nouveau bon</button>
     </div>
@@ -289,23 +289,23 @@
       <div class="bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
         <h3 class="font-bold">Informations du fournisseur</h3>
 
-        <select id="po-supplier-select" onchange="loadPurchaseSupplier()" class="w-full px-3 py-2.5 rounded-xl border">
+        <select id="po-supplier-select" onchange="loadPurchaseSupplier()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-teal-500 outline-none transition">
           <option value="">— Choisir un fournisseur —</option>
         </select>
 
-        <input id="po-supplier-name" placeholder="Société fournisseur" class="w-full px-3 py-2.5 rounded-xl border">
-        <input id="po-client" value="NATHAL MEDIC" class="w-full px-3 py-2.5 rounded-xl border">
-        <input id="po-address" placeholder="Adresse du fournisseur" class="w-full px-3 py-2.5 rounded-xl border">
-        <input id="po-phone" placeholder="Téléphone" class="w-full px-3 py-2.5 rounded-xl border">
+        <input id="po-supplier-name" placeholder="Société fournisseur" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-teal-500 outline-none transition">
+        <input id="po-client" value="NATHAL MEDIC" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-teal-500 outline-none transition">
+        <input id="po-address" placeholder="Adresse du fournisseur" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-teal-500 outline-none transition">
+        <input id="po-phone" placeholder="Téléphone" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-teal-500 outline-none transition">
 
         <div class="grid grid-cols-2 gap-3">
-          <input id="po-city" value="Tanger" class="w-full px-3 py-2.5 rounded-xl border">
-          <input id="po-date" type="date" class="w-full px-3 py-2.5 rounded-xl border">
+          <input id="po-city" value="Tanger" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-teal-500 outline-none transition">
+          <input id="po-date" type="date" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-teal-500 outline-none transition">
         </div>
 
-        <input id="po-number" readonly class="w-full px-3 py-2.5 rounded-xl border bg-slate-50">
+        <input id="po-number" readonly class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-slate-500 outline-none">
 
-        <button onclick="savePurchaseSupplier()" class="w-full px-4 py-2.5 rounded-xl bg-teal-50 text-teal-700 font-bold">
+        <button onclick="savePurchaseSupplier()" class="w-full px-4 py-2.5 rounded-xl bg-teal-50 text-teal-700 font-bold hover:bg-teal-100 transition">
           💾 Enregistrer ce fournisseur
         </button>
       </div>
@@ -313,7 +313,7 @@
       <div class="xl:col-span-2 bg-white rounded-2xl border border-slate-200 p-5">
         <div class="flex justify-between items-center mb-4">
           <h3 class="font-bold">Produits à commander</h3>
-          <button onclick="addPurchaseLine()" class="px-3 py-2 rounded-lg bg-blue-50 text-blue-700 font-bold">
+          <button onclick="addPurchaseLine()" class="px-3 py-2 rounded-lg bg-blue-50 text-blue-700 font-bold hover:bg-blue-100 transition">
             ＋ Ajouter une ligne
           </button>
         </div>
@@ -322,7 +322,7 @@
           <table class="w-full text-sm min-w-[650px]">
             <thead class="bg-slate-50">
               <tr>
-                <th class="p-3 text-left">Produit</th>
+                <th class="p-3 text-left">Désignation du produit</th>
                 <th class="p-3 text-left">Quantité</th>
                 <th class="p-3 text-left">Prix unitaire (DH)</th>
                 <th class="p-3 text-right">Total</th>
@@ -338,7 +338,7 @@
           <div id="po-total" class="text-2xl font-extrabold text-blue-700">0,00 DH</div>
         </div>
 
-        <button onclick="generateSupplierPurchaseOrder()" class="mt-6 px-5 py-3 rounded-xl bg-blue-600 text-white font-bold">
+        <button onclick="generateSupplierPurchaseOrder()" class="mt-6 px-5 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition shadow-md">
           🖨️ Générer le bon / PDF
         </button>
       </div>
@@ -1398,59 +1398,33 @@ function savePurchaseSupplier() {
   alert('تم حفظ المورد');
 }
 
-function poProductOptions(selectedId = '') {
-  return '<option value="">— اختر منتجاً —</option>' +
-    products.map(p =>
-      `<option value="${poEscape(p.id)}" ${String(p.id) === String(selectedId) ? 'selected' : ''}>${poEscape(p.name)}</option>`
-    ).join('');
-}
-
-function addPurchaseLine(name = '', qty = 1, price = '', productId = '') {
+// ============ MODIFIED: Add Purchase Line ============
+function addPurchaseLine(name = '', qty = 1, price = '') {
   const tr = document.createElement('tr');
-  tr.className = 'border-t';
+  tr.className = 'border-t border-slate-200';
 
   tr.innerHTML = `
     <td class="p-2">
-      <select class="po-product w-full p-2 border rounded mb-1"
-        onchange="poSelectProduct(this)">
-        ${poProductOptions(productId)}
-      </select>
-      <input class="po-name w-full p-2 border rounded"
-        placeholder="Désignation" value="${poEscape(name)}"
-        oninput="updatePurchaseTotal()">
+      <input class="po-name w-full p-2.5 border border-slate-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition" 
+        placeholder="Nom du produit (ex: Tensiomètre)" value="${poEscape(name)}" required>
     </td>
     <td class="p-2">
-      <input class="po-qty w-24 p-2 border rounded"
-        type="number" min="0.01" step="0.01"
-        value="${qty}" oninput="updatePurchaseTotal()">
+      <input class="po-qty w-24 p-2.5 border border-slate-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition" 
+        type="number" min="1" step="1" value="${qty}" oninput="updatePurchaseTotal()">
     </td>
     <td class="p-2">
-      <input class="po-price w-28 p-2 border rounded"
-        type="number" min="0" step="0.01"
-        value="${price}" oninput="updatePurchaseTotal()">
+      <input class="po-price w-28 p-2.5 border border-slate-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition" 
+        type="number" min="0" step="0.01" placeholder="0.00" value="${price}" oninput="updatePurchaseTotal()">
     </td>
-    <td class="p-2 text-right po-line-total">0,00 DH</td>
-    <td class="p-2">
-      <button onclick="this.closest('tr').remove();updatePurchaseTotal()"
-        class="text-red-600">×</button>
+    <td class="p-2 text-right po-line-total font-semibold text-slate-700">0,00 DH</td>
+    <td class="p-2 text-center">
+      <button type="button" onclick="this.closest('tr').remove();updatePurchaseTotal()" class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg>
+      </button>
     </td>
   `;
 
   document.getElementById('po-lines').appendChild(tr);
-  updatePurchaseTotal();
-}
-
-function poSelectProduct(select) {
-  const product = products.find(p => String(p.id) === String(select.value));
-  if (!product) return;
-
-  const row = select.closest('tr');
-  row.querySelector('.po-name').value = product.name || '';
-
-  if (!row.querySelector('.po-price').value) {
-    row.querySelector('.po-price').value = Number(product.price || 0);
-  }
-
   updatePurchaseTotal();
 }
 
