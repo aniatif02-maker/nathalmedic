@@ -8,11 +8,51 @@
 <link rel="shortcut icon" type="image/png" href="https://i.postimg.cc/g2FNShN1/logo.png">
 <link rel="apple-touch-icon" href="https://i.postimg.cc/g2FNShN1/logo.png">
 <meta name="description" content="NathalMedic : Vente en ligne de matériel médical et soins au Maroc. Paiement à la livraison. Livraison gratuite dès 1000 DH." />
+
+<!-- ================= OPEN GRAPH / TWITTER CARD ================= -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="NathalMedic" />
+<meta property="og:title" content="NathalMedic — Matériel Médical au Maroc" />
+<meta property="og:description" content="Équipements médicaux certifiés, livrés rapidement partout au Maroc. Livraison gratuite dès 1000 DH." />
+<meta property="og:image" content="https://i.postimg.cc/rwJyKMCh/Whats-App-Image-2026-09-29-at-15-33-51.webp" />
+<meta property="og:url" content="https://nathalmedic.com" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="NathalMedic — Matériel Médical au Maroc" />
+<meta name="twitter:description" content="Livraison gratuite dès 1000 DH partout au Maroc." />
+<meta name="twitter:image" content="https://i.postimg.cc/rwJyKMCh/Whats-App-Image-2026-09-29-at-15-33-51.webp" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- ================= META PIXEL ================= -->
+<!-- [À COMPLÉTER] Remplacez YOUR_META_PIXEL_ID par votre ID (ex: 123456789012345) -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'YOUR_META_PIXEL_ID');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_META_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
+
+<!-- ================= GOOGLE ANALYTICS ================= -->
+<!-- [À COMPLÉTER] Remplacez G-XXXXXXXXXX par votre ID de mesure GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX');
+</script>
+
 <script>
   tailwind.config = {
     theme: {
@@ -30,6 +70,30 @@
     }
   }
 </script>
+
+<!-- ================= JSON-LD ORGANIZATION ================= -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "NathalMedic",
+  "url": "https://nathalmedic.com",
+  "logo": "https://i.postimg.cc/g2FNShN1/logo.png",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+212665440953",
+    "contactType": "customer service",
+    "availableLanguage": ["French", "Arabic"]
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "MA",
+    "addressLocality": "[À COMPLÉTER : Ville]",
+    "streetAddress": "[À COMPLÉTER : Adresse]"
+  }
+}
+</script>
+
 <style>
   html { scroll-behavior: smooth; overflow-x: clip; }
   body { font-family: 'Inter','Cairo',sans-serif; overflow-x: clip; max-width: 100vw; }
@@ -49,6 +113,8 @@
   .line-clamp-2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
   .spinner { border: 3px solid #e2e8f0; border-top-color: #0082cd; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; margin: 0 auto; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pulse-ring { 0%{box-shadow:0 0 0 0 rgba(37,211,102,.5)} 70%{box-shadow:0 0 0 16px rgba(37,211,102,0)} 100%{box-shadow:0 0 0 0 rgba(37,211,102,0)} }
+  .wa-pulse { animation: pulse-ring 2s infinite; }
 
   @media (max-width: 640px) {
     header .max-w-7xl { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
@@ -115,6 +181,7 @@
       <a href="#" class="px-4 py-3 text-brand-700 border-b-2 border-brand-600 font-semibold">Accueil</a>
       <a href="#categories" class="px-4 py-3 text-slate-600 hover:text-brand-700 transition">Catégories</a>
       <a href="#products" class="px-4 py-3 text-slate-600 hover:text-brand-700 transition">Boutique</a>
+      <a href="#avis" class="px-4 py-3 text-slate-600 hover:text-brand-700 transition">Avis</a>
       <a href="#contact" class="px-4 py-3 text-slate-600 hover:text-brand-700 transition">Contact</a>
     </div>
   </nav>
@@ -122,6 +189,7 @@
     <input id="searchInputMobile" type="text" placeholder="Rechercher..." class="w-full px-4 py-2.5 rounded-full border border-slate-200 bg-slate-50 outline-none text-sm mb-2"/>
     <a href="#categories" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50">Catégories</a>
     <a href="#products" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50">Boutique</a>
+    <a href="#avis" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50">Avis</a>
     <a href="#contact" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50">Contact</a>
   </div>
 </header>
@@ -200,6 +268,51 @@
   </div>
 </section>
 
+<!-- ================= AVIS CLIENTS ================= -->
+<!-- [À COMPLÉTER] Remplacez les 3 avis par de vrais avis clients. N'inventez pas d'avis, c'est illégal et Meta peut refuser les pubs. -->
+<section id="avis" class="max-w-7xl mx-auto px-4 py-16 md:py-20">
+  <div class="text-center mb-8 md:mb-12">
+    <span class="text-mint-600 font-semibold text-xs md:text-sm uppercase tracking-widest">Avis clients</span>
+    <h2 class="mt-2 text-2xl md:text-4xl font-extrabold tracking-tight">Ils nous font confiance</h2>
+    <div class="mt-3 flex items-center justify-center gap-2">
+      <span class="text-amber-400 text-lg">★★★★★</span>
+      <span class="text-sm text-slate-500 font-semibold">4.9/5 sur [À COMPLÉTER : nombre] avis</span>
+    </div>
+  </div>
+  <div class="grid md:grid-cols-3 gap-5">
+    <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+      <div class="flex items-center gap-1 text-amber-400 mb-3">★★★★★</div>
+      <p class="text-slate-600 text-sm leading-relaxed mb-4">"[À COMPLÉTER : avis client réel — ex: Livraison rapide et produit conforme. Je recommande.]"</p>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center font-bold text-brand-700">[A]</div>
+        <div><div class="font-bold text-sm">[À COMPLÉTER : Prénom]</div><div class="text-xs text-slate-500">[À COMPLÉTER : Ville]</div></div>
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+      <div class="flex items-center gap-1 text-amber-400 mb-3">★★★★★</div>
+      <p class="text-slate-600 text-sm leading-relaxed mb-4">"[À COMPLÉTER : avis client réel]"</p>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-mint-100 flex items-center justify-center font-bold text-mint-700">[B]</div>
+        <div><div class="font-bold text-sm">[À COMPLÉTER : Prénom]</div><div class="text-xs text-slate-500">[À COMPLÉTER : Ville]</div></div>
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+      <div class="flex items-center gap-1 text-amber-400 mb-3">★★★★★</div>
+      <p class="text-slate-600 text-sm leading-relaxed mb-4">"[À COMPLÉTER : avis client réel]"</p>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center font-bold text-amber-700">[C]</div>
+        <div><div class="font-bold text-sm">[À COMPLÉTER : Prénom]</div><div class="text-xs text-slate-500">[À COMPLÉTER : Ville]</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="flex items-center gap-2 justify-center text-xs md:text-sm text-slate-600 bg-white rounded-xl p-3 border border-slate-100"><span class="text-lg">🚚</span> Livraison 24-48h</div>
+    <div class="flex items-center gap-2 justify-center text-xs md:text-sm text-slate-600 bg-white rounded-xl p-3 border border-slate-100"><span class="text-lg">💵</span> Paiement à la livraison</div>
+    <div class="flex items-center gap-2 justify-center text-xs md:text-sm text-slate-600 bg-white rounded-xl p-3 border border-slate-100"><span class="text-lg">✅</span> Produits certifiés</div>
+    <div class="flex items-center gap-2 justify-center text-xs md:text-sm text-slate-600 bg-white rounded-xl p-3 border border-slate-100"><span class="text-lg">↩️</span> Retour 7 jours</div>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section id="contact" class="max-w-7xl mx-auto px-4 py-16 md:py-20">
   <div class="grid md:grid-cols-2 gap-8 md:gap-10 items-center">
@@ -230,6 +343,20 @@
   </div>
 </section>
 
+<!-- ================= NEWSLETTER ================= -->
+<!-- [À COMPLÉTER] Brancher sur un vrai backend (Supabase table 'newsletter', Mailchimp, etc.) -->
+<section class="bg-gradient-to-r from-brand-700 to-mint-600 text-white py-10">
+  <div class="max-w-3xl mx-auto px-4 text-center">
+    <h3 class="text-xl md:text-2xl font-extrabold mb-2">-10% sur votre première commande</h3>
+    <p class="text-white/80 text-sm mb-4">Inscrivez-vous pour recevoir nos offres exclusives et nouveautés.</p>
+    <form onsubmit="subscribeNewsletter(event)" class="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
+      <input id="nlEmail" type="email" required placeholder="Votre email" class="flex-1 px-4 py-3 rounded-full text-slate-800 outline-none text-sm"/>
+      <button type="submit" class="px-6 py-3 rounded-full bg-white text-brand-700 font-bold hover:bg-brand-50 transition text-sm">S'inscrire</button>
+    </form>
+    <p class="text-[11px] text-white/60 mt-3">En vous inscrivant, vous acceptez notre <a href="#" onclick="openLegal('privacy'); return false;" class="underline">politique de confidentialité</a>.</p>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer class="bg-slate-900 text-slate-300 pt-12 pb-6">
   <div class="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -248,38 +375,44 @@
     <div>
       <h4 class="font-bold text-white mb-4">Informations</h4>
       <ul class="space-y-2 text-sm">
-        <li><a href="#" class="hover:text-brand-400 transition">À propos</a></li>
-        <li><a href="#" class="hover:text-brand-400 transition">Livraison & Retours</a></li>
+        <li><a href="#" onclick="openLegal('mentions'); return false;" class="hover:text-brand-400 transition">Mentions légales</a></li>
+        <li><a href="#" onclick="openLegal('cgv'); return false;" class="hover:text-brand-400 transition">CGV</a></li>
+        <li><a href="#" onclick="openLegal('retour'); return false;" class="hover:text-brand-400 transition">Livraison & Retours</a></li>
+        <li><a href="#" onclick="openLegal('privacy'); return false;" class="hover:text-brand-400 transition">Confidentialité</a></li>
         <li><a href="#contact" class="hover:text-brand-400 transition">Contact</a></li>
       </ul>
     </div>
   </div>
-  <div class="max-w-7xl mx-auto px-4 mt-12 pt-6 border-t border-slate-800 text-center text-sm text-slate-500">
-    <p>© <span id="yr"></span> NathalMedic. Tous droits réservés.</p>
+  <div class="max-w-7xl mx-auto px-4 mt-8 pt-6 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2 text-xs text-slate-400">
+      <span>Paiement :</span>
+      <span class="px-2 py-1 rounded bg-slate-800 text-white font-bold">💵 Cash à la livraison</span>
+      <span class="px-2 py-1 rounded bg-slate-800 text-white font-bold">🏦 Virement</span>
+    </div>
+    <p class="text-sm text-slate-500">© <span id="yr"></span> NathalMedic. Tous droits réservés.</p>
   </div>
 </footer>
 
 <!-- ============================================ -->
-<!-- PRODUCT MODAL (مع الإصلاح) -->
+<!-- PRODUCT MODAL -->
 <!-- ============================================ -->
 <div id="productModal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-2 md:p-4">
   <div onclick="closeModal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
   <div class="relative bg-white rounded-2xl md:rounded-3xl shadow-2xl w-full max-w-4xl max-h-[95vh] overflow-y-auto modal-in">
     <button onclick="closeModal()" class="absolute top-3 right-3 z-20 w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-slate-100 transition">✕</button>
-    
     <div class="grid md:grid-cols-2 gap-0">
-      <!-- ✨ IMAGE: الآن كاملة بدون قص -->
       <div class="relative bg-slate-50 aspect-square md:aspect-auto md:min-h-[500px] rounded-t-2xl md:rounded-l-3xl md:rounded-tr-none overflow-hidden flex items-center justify-center p-6">
         <img id="pmImage" src="" alt="" class="max-w-full max-h-[450px] object-contain"/>
       </div>
-      
-      <!-- INFOS -->
       <div class="p-5 md:p-8 flex flex-col">
         <div id="pmCat" class="text-[10px] md:text-xs uppercase tracking-widest text-brand-600 font-bold mb-2"></div>
         <h2 id="pmName" class="text-xl md:text-3xl font-extrabold leading-tight mb-3"></h2>
-        <div class="flex items-baseline gap-3 mb-5">
+        <div class="flex items-baseline gap-3 mb-3">
           <div id="pmPrice" class="text-2xl md:text-3xl font-extrabold text-brand-700"></div>
           <div id="pmOld" class="text-base md:text-lg text-slate-400 line-through"></div>
+        </div>
+        <div id="pmStock" class="inline-flex items-center gap-1.5 text-xs font-semibold text-mint-700 bg-mint-50 px-2.5 py-1 rounded-full mb-4 w-fit">
+          <span class="w-1.5 h-1.5 rounded-full bg-mint-500"></span> En stock
         </div>
         <p id="pmDesc" class="text-slate-600 text-sm leading-relaxed mb-6 max-h-48 overflow-y-auto"></p>
         <div class="mb-6">
@@ -295,7 +428,7 @@
         </div>
         <div class="flex flex-col sm:flex-row gap-3 mt-auto">
           <button onclick="addModalToCart()" class="flex-1 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold transition">Ajouter au panier</button>
-          <a id="pmWhats" href="#" target="_blank" class="py-3 px-5 rounded-xl bg-mint-500 hover:bg-mint-600 text-white font-bold transition text-center">Commander</a>
+          <a id="pmWhats" href="#" target="_blank" rel="noopener" class="py-3 px-5 rounded-xl bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold transition text-center">Commander</a>
         </div>
       </div>
     </div>
@@ -332,11 +465,50 @@
         </div>
         <div class="bg-slate-50 rounded-xl p-4 border">
           <div class="flex justify-between text-sm mb-2"><span>Produits</span><span id="ordCount">0 article(s)</span></div>
-          <div class="flex justify-between text-lg font-extrabold"><span>Total</span><span id="ordTotal" class="text-brand-700">0 DH</span></div>
+          <div class="flex justify-between text-sm mb-2"><span>Livraison</span><span id="ordShip">—</span></div>
+          <div class="flex justify-between text-lg font-extrabold pt-2 border-t border-dashed"><span>Total</span><span id="ordTotal" class="text-brand-700">0 DH</span></div>
         </div>
         <button type="submit" id="ordSubmitBtn" class="w-full py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold">Confirmer la commande</button>
+        <p class="text-[11px] text-center text-slate-500">En confirmant, vous acceptez nos <a href="#" onclick="closeOrderModal(); openLegal('cgv'); return false;" class="underline">CGV</a>.</p>
       </form>
     </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- THANK YOU MODAL (NOUVEAU) -->
+<!-- ============================================ -->
+<div id="thankYouModal" class="hidden fixed inset-0 z-[85] flex items-center justify-center p-2 md:p-4">
+  <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+  <div class="relative bg-white rounded-2xl md:rounded-3xl shadow-2xl w-full max-w-md modal-in">
+    <div class="p-6 md:p-8 text-center">
+      <div class="w-16 h-16 rounded-full bg-mint-100 flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-mint-600" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <h3 class="text-xl md:text-2xl font-extrabold mb-2">Commande confirmée !</h3>
+      <p class="text-slate-600 text-sm mb-4">Merci <span id="tyName" class="font-semibold"></span>, nous vous contacterons bientôt.</p>
+      <div class="bg-slate-50 rounded-xl p-4 mb-4 text-left space-y-2">
+        <div class="flex justify-between text-sm"><span class="text-slate-500">N° commande</span><span id="tyOrderId" class="font-extrabold text-brand-700"></span></div>
+        <div class="flex justify-between text-sm"><span class="text-slate-500">Articles</span><span id="tyCount" class="font-semibold"></span></div>
+        <div class="flex justify-between text-sm"><span class="text-slate-500">Total</span><span id="tyTotal" class="font-extrabold text-brand-700"></span></div>
+        <div class="flex justify-between text-sm"><span class="text-slate-500">Livraison</span><span id="tyShip" class="font-semibold"></span></div>
+      </div>
+      <a id="tyWhats" href="#" target="_blank" rel="noopener" class="block w-full py-3 rounded-xl bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold mb-2">Confirmer sur WhatsApp</a>
+      <button onclick="closeThankYou()" class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm">Fermer</button>
+      <p class="text-[11px] text-slate-400 mt-3">Conservez votre numéro de commande pour tout suivi.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- LEGAL MODAL (NOUVEAU) -->
+<!-- [À COMPLÉTER] Remplacez les textes par vos vrais documents légaux -->
+<!-- ============================================ -->
+<div id="legalModal" class="hidden fixed inset-0 z-[85] flex items-center justify-center p-2 md:p-4">
+  <div onclick="closeLegal()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+  <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto modal-in">
+    <button onclick="closeLegal()" class="sticky top-3 float-right mr-3 z-10 w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-slate-100">✕</button>
+    <div class="p-6 md:p-8" id="legalContent"></div>
   </div>
 </div>
 
@@ -347,7 +519,20 @@
     <h3 class="font-bold text-lg">🛒 Mon Panier</h3>
     <button onclick="toggleCart()" class="p-2 rounded-lg hover:bg-slate-100">✕</button>
   </div>
+
+  <!-- FREE SHIPPING PROGRESS BAR (NOUVEAU) -->
+  <div id="freeShipProgress" class="px-5 py-3 bg-mint-50 border-b border-mint-100">
+    <div class="text-xs font-semibold text-mint-800 mb-1.5" id="freeShipText">Ajoutez 1000 DH pour la livraison gratuite</div>
+    <div class="w-full h-2 bg-mint-100 rounded-full overflow-hidden">
+      <div id="freeShipBar" class="h-full bg-gradient-to-r from-mint-400 to-mint-500 rounded-full transition-all duration-500" style="width:0%"></div>
+    </div>
+  </div>
+
   <div id="cartItems" class="flex-1 overflow-y-auto p-5 space-y-3"></div>
+
+  <!-- CROSS-SELL (NOUVEAU) -->
+  <div id="cartCrossSell" class="px-5 pb-3"></div>
+
   <div class="border-t p-5 space-y-3">
     <div class="flex justify-between text-sm"><span>Sous-total</span><span id="cartSubtotal" class="font-semibold">0 DH</span></div>
     <div class="flex justify-between text-sm"><span>Livraison</span><span id="cartShipping" class="font-semibold text-mint-600">Calculée</span></div>
@@ -356,8 +541,17 @@
   </div>
 </aside>
 
+<!-- ============================================ -->
+<!-- FLOATING WHATSAPP BUTTON (NOUVEAU) -->
+<!-- ============================================ -->
+<a href="https://wa.me/212665440953?text=Bonjour%20NathalMedic%2C%20j%27ai%20une%20question" target="_blank" rel="noopener"
+   class="wa-pulse fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#1ebe5d] text-white shadow-2xl flex items-center justify-center transition-transform hover:scale-110"
+   aria-label="Contacter sur WhatsApp">
+  <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
 <!-- TOAST -->
-<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[80] hidden">
+<div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[80] hidden">
   <div class="bg-slate-900 text-white px-5 py-3 rounded-full shadow-2xl text-sm font-medium">
     <span id="toastMsg">OK</span>
   </div>
@@ -372,6 +566,13 @@ const SUPABASE_KEY = "sb_publishable_F-tXmeh3IX5t_n3CIpvZVQ_ED_uvNtm";
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ============================================================
+// CONFIG
+// ============================================================
+const FREE_SHIPPING_THRESHOLD = 1000; // DH
+const SHIPPING_COST = 30;              // DH
+const WHATSAPP_NUMBER = '212665440953';
+
+// ============================================================
 // STATE
 // ============================================================
 let CATEGORIES = [];
@@ -381,6 +582,30 @@ let activeCat = 'all';
 let searchQ = '';
 let currentProduct = null;
 let modalQty = 1;
+let lastOrderData = null;
+let lastOrderId = null;
+
+// ============================================================
+// TRACKING (Meta Pixel + GA4)
+// ============================================================
+function track(event, data = {}) {
+  try { if (typeof fbq === 'function') fbq('track', event, data); } catch(e){}
+  try {
+    if (typeof gtag === 'function') {
+      const gaMap = { ViewContent:'view_item', AddToCart:'add_to_cart', InitiateCheckout:'begin_checkout', Purchase:'purchase', Lead:'generate_lead' };
+      if (gaMap[event]) gtag('event', gaMap[event], data);
+    }
+  } catch(e){}
+}
+
+// ============================================================
+// ORDER ID
+// ============================================================
+function generateOrderId() {
+  const ts = Date.now().toString(36).toUpperCase();
+  const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return 'NM-' + ts + '-' + rand;
+}
 
 // ============================================================
 // LOAD DATA
@@ -388,16 +613,13 @@ let modalQty = 1;
 async function loadData() {
   const catGrid = document.getElementById('catGrid');
   const productGrid = document.getElementById('productGrid');
-  
   try {
     const [cRes, pRes] = await Promise.all([
       sb.from('categories').select('*').order('display_order'),
       sb.from('products').select('*').order('created_at', { ascending: false })
     ]);
-    
     if (cRes.error) throw new Error('Categories: ' + cRes.error.message);
     if (pRes.error) throw new Error('Products: ' + pRes.error.message);
-    
     CATEGORIES = cRes.data || [];
     PRODUCTS = (pRes.data || []).map(x => ({
       id: x.id,
@@ -407,24 +629,29 @@ async function loadData() {
       old: x.old_price,
       badge: x.badge,
       desc: x.description,
-      img: x.image_url
+      img: x.image_url,
+      stock: x.stock !== false // [À COMPLÉTER] Ajoutez une colonne "stock" dans Supabase si vous voulez gérer le stock réel
     }));
-    
     renderCategories();
     renderFilters();
     renderFooterCats();
     renderProducts();
-    
+    checkHashForProduct();
   } catch (err) {
     console.error('❌', err);
-    catGrid.innerHTML = `
-      <div class="col-span-full text-center py-12">
-        <div class="inline-block bg-rose-50 border border-rose-200 text-rose-700 px-6 py-4 rounded-xl text-left">
-          <strong>❌ Erreur</strong><br>
-          <span class="text-sm">${err.message}</span>
-        </div>
-      </div>`;
+    catGrid.innerHTML = '<div class="col-span-full text-center py-12"><div class="inline-block bg-rose-50 border border-rose-200 text-rose-700 px-6 py-4 rounded-xl text-left"><strong>❌ Erreur</strong><br><span class="text-sm">' + err.message + '</span></div></div>';
     productGrid.innerHTML = '';
+  }
+}
+
+// ============================================================
+// HASH ROUTING (product URLs)
+// ============================================================
+function checkHashForProduct() {
+  const m = location.hash.match(/#p=(\d+)/);
+  if (m) {
+    const id = parseInt(m[1]);
+    if (PRODUCTS.find(x => x.id === id)) openModal(id, true);
   }
 }
 
@@ -455,26 +682,23 @@ function renderCategories() {
 function renderFilters() {
   const filterBar = document.getElementById('filterBar');
   const allChip = `<button data-cat="all" onclick="filterCat('all')" class="px-4 py-2 rounded-full text-sm font-semibold transition bg-brand-600 text-white shadow-md">Tous</button>`;
-  const catChips = CATEGORIES.map(c => 
+  const catChips = CATEGORIES.map(c =>
     `<button data-cat="${c.id}" onclick="filterCat('${c.id}')" class="px-4 py-2 rounded-full text-sm font-semibold transition bg-slate-100 text-slate-700 hover:bg-slate-200">${c.name}</button>`
   ).join('');
   filterBar.innerHTML = allChip + catChips;
 }
 
 function renderFooterCats() {
-  const footerCats = document.getElementById('footerCats');
-  footerCats.innerHTML = CATEGORIES.map(c => 
+  document.getElementById('footerCats').innerHTML = CATEGORIES.map(c =>
     `<li><a href="#products" onclick="filterCat('${c.id}'); return false;" class="hover:text-brand-400 transition">${c.name}</a></li>`
   ).join('');
 }
 
 function updateFilterChips() {
   document.querySelectorAll('#filterBar button').forEach(b => {
-    if (b.dataset.cat === activeCat) {
-      b.className = 'px-4 py-2 rounded-full text-sm font-semibold transition bg-brand-600 text-white shadow-md';
-    } else {
-      b.className = 'px-4 py-2 rounded-full text-sm font-semibold transition bg-slate-100 text-slate-700 hover:bg-slate-200';
-    }
+    b.className = b.dataset.cat === activeCat
+      ? 'px-4 py-2 rounded-full text-sm font-semibold transition bg-brand-600 text-white shadow-md'
+      : 'px-4 py-2 rounded-full text-sm font-semibold transition bg-slate-100 text-slate-700 hover:bg-slate-200';
   });
 }
 
@@ -492,12 +716,10 @@ function renderProducts() {
     (activeCat === 'all' || p.cat === activeCat) &&
     (!q || p.name.toLowerCase().includes(q))
   );
-  
   if (list.length === 0) {
     grid.innerHTML = '<div class="col-span-full text-center py-12 text-slate-400">Aucun produit trouvé.</div>';
     return;
   }
-  
   grid.innerHTML = list.map(p => {
     const cat = CATEGORIES.find(c => c.id === p.cat);
     return `
@@ -505,6 +727,7 @@ function renderProducts() {
         <div class="relative aspect-square overflow-hidden bg-slate-100">
           <img src="${p.img}" alt="${p.name}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
           ${p.badge ? `<span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold ${p.badge==='Nouveau'?'bg-mint-500':'bg-rose-500'} text-white shadow">${p.badge}</span>` : ''}
+          ${p.stock === false ? `<span class="absolute top-3 right-3 px-2 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-white">Rupture</span>` : ''}
           <button onclick="event.stopPropagation();addToCart(${p.id},1)" class="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center text-brand-600 hover:bg-brand-600 hover:text-white transition">+</button>
         </div>
         <div class="p-4 flex flex-col flex-1">
@@ -525,17 +748,14 @@ function renderProducts() {
 // ============================================================
 // SEARCH
 // ============================================================
-document.getElementById('searchInput').addEventListener('input', e => {
-  searchQ = e.target.value;
-  renderProducts();
-});
+document.getElementById('searchInput').addEventListener('input', e => { searchQ = e.target.value; renderProducts(); });
 const ms = document.getElementById('searchInputMobile');
 if (ms) ms.addEventListener('input', e => { searchQ = e.target.value; renderProducts(); });
 
 // ============================================================
 // MODAL
 // ============================================================
-function openModal(id) {
+function openModal(id, fromHash = false) {
   const p = PRODUCTS.find(x => x.id === id);
   if (!p) return;
   currentProduct = p;
@@ -548,14 +768,25 @@ function openModal(id) {
   document.getElementById('pmOld').textContent = p.old ? p.old + ' DH' : '';
   document.getElementById('pmDesc').textContent = p.desc || '';
   document.getElementById('pmQty').value = 1;
+  const stockEl = document.getElementById('pmStock');
+  if (p.stock === false) {
+    stockEl.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Rupture de stock';
+    stockEl.className = 'inline-flex items-center gap-1.5 text-xs font-semibold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-full mb-4 w-fit';
+  } else {
+    stockEl.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-mint-500"></span> En stock';
+    stockEl.className = 'inline-flex items-center gap-1.5 text-xs font-semibold text-mint-700 bg-mint-50 px-2.5 py-1 rounded-full mb-4 w-fit';
+  }
   updateModalTotal();
   updateWhatsLink();
   document.getElementById('productModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  if (!fromHash) history.replaceState(null, '', '#p=' + id);
+  track('ViewContent', { content_ids: [String(p.id)], content_name: p.name, value: p.price, currency: 'MAD' });
 }
 function closeModal() {
   document.getElementById('productModal').classList.add('hidden');
   document.body.style.overflow = '';
+  if (location.hash.startsWith('#p=')) history.replaceState(null, '', location.pathname + location.search);
 }
 function changeModalQty(d) {
   modalQty = Math.max(1, modalQty + d);
@@ -570,8 +801,8 @@ function updateModalTotal() {
 function updateWhatsLink() {
   if (!currentProduct) return;
   const total = currentProduct.price * modalQty;
-  const msg = `Bonjour, je souhaite commander : ${currentProduct.name} x${modalQty} = ${total} DH`;
-  document.getElementById('pmWhats').href = `https://wa.me/212665440953?text=${encodeURIComponent(msg)}`;
+  const msg = 'Bonjour, je souhaite commander : ' + currentProduct.name + ' x' + modalQty + ' = ' + total + ' DH';
+  document.getElementById('pmWhats').href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg);
 }
 function addModalToCart() {
   if (!currentProduct) return;
@@ -585,11 +816,13 @@ function addModalToCart() {
 function addToCart(id, qty = 1) {
   const p = PRODUCTS.find(x => x.id === id);
   if (!p) return;
+  if (p.stock === false) return showToast('Produit en rupture de stock');
   const item = cart.find(x => x.id === id);
   if (item) item.qty += qty;
   else cart.push({ id, name:p.name, price:p.price, img:p.img, qty });
   saveCart(); renderCart();
-  showToast(`${p.name} ajouté ✓`);
+  showToast(p.name + ' ajouté ✓');
+  track('AddToCart', { content_ids: [String(p.id)], content_name: p.name, value: p.price * qty, currency: 'MAD' });
 }
 function removeFromCart(id) {
   cart = cart.filter(x => x.id !== id);
@@ -609,7 +842,7 @@ function renderCart() {
   const count = cart.reduce((s,x)=>s+x.qty, 0);
   document.getElementById('cartCount').textContent = count;
   if (!cart.length) {
-    items.innerHTML = '<div class="text-center py-16 text-slate-400"><p>Votre panier est vide</p></div>';
+    items.innerHTML = '<div class="text-center py-12 text-slate-400"><p>Votre panier est vide</p></div>';
   } else {
     items.innerHTML = cart.map(it => `
       <div class="flex gap-3 p-3 rounded-xl border bg-slate-50">
@@ -627,10 +860,50 @@ function renderCart() {
       </div>`).join('');
   }
   const sub = cart.reduce((s,x)=>s+x.price*x.qty, 0);
-  const ship = sub === 0 ? 0 : (sub >= 1000 ? 0 : 30);
+  const ship = sub === 0 ? 0 : (sub >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST);
   document.getElementById('cartSubtotal').textContent = sub + ' DH';
   document.getElementById('cartShipping').textContent = sub === 0 ? '—' : (ship === 0 ? 'Gratuite 🎉' : ship + ' DH');
   document.getElementById('cartTotal').textContent = (sub + ship) + ' DH';
+
+  // Free shipping progress
+  const progress = Math.min(100, (sub / FREE_SHIPPING_THRESHOLD) * 100);
+  document.getElementById('freeShipBar').style.width = progress + '%';
+  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - sub);
+  const fsText = document.getElementById('freeShipText');
+  if (sub === 0) {
+    fsText.textContent = 'Livraison gratuite dès ' + FREE_SHIPPING_THRESHOLD + ' DH';
+  } else if (remaining === 0) {
+    fsText.innerHTML = '🎉 <span class="font-bold">Livraison gratuite débloquée !</span>';
+  } else {
+    fsText.innerHTML = 'Ajoutez <span class="font-bold">' + remaining + ' DH</span> pour la livraison gratuite';
+  }
+
+  // Cross-sell
+  renderCrossSell();
+}
+
+function renderCrossSell() {
+  const el = document.getElementById('cartCrossSell');
+  if (!cart.length) { el.innerHTML = ''; return; }
+  const inCart = cart.map(x => x.id);
+  const suggestions = PRODUCTS.filter(p => !inCart.includes(p.id) && p.stock !== false).slice(0, 2);
+  if (!suggestions.length) { el.innerHTML = ''; return; }
+  el.innerHTML = `
+    <div class="pt-3 border-t border-dashed">
+      <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Vous aimerez aussi</div>
+      <div class="space-y-2">
+        ${suggestions.map(p => `
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 transition cursor-pointer" onclick="addToCart(${p.id},1)">
+            <img src="${p.img}" class="w-10 h-10 rounded object-cover"/>
+            <div class="flex-1 min-w-0">
+              <div class="text-xs font-semibold truncate">${p.name}</div>
+              <div class="text-xs text-brand-700 font-bold">${p.price} DH</div>
+            </div>
+            <button class="w-7 h-7 rounded-full bg-brand-600 text-white text-sm font-bold flex items-center justify-center">+</button>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
 }
 
 function toggleCart() {
@@ -656,11 +929,13 @@ function openOrderModal() {
   toggleCart();
   const count = cart.reduce((s,x)=>s+x.qty, 0);
   const sub = cart.reduce((s,x)=>s+x.price*x.qty, 0);
-  const ship = sub >= 1000 ? 0 : 30;
+  const ship = sub >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
   document.getElementById('ordCount').textContent = count + ' article(s)';
+  document.getElementById('ordShip').textContent = ship === 0 ? 'Gratuite 🎉' : ship + ' DH';
   document.getElementById('ordTotal').textContent = (sub + ship) + ' DH';
   document.getElementById('orderModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  track('InitiateCheckout', { value: sub, currency: 'MAD', num_items: count });
 }
 function closeOrderModal() {
   document.getElementById('orderModal').classList.add('hidden');
@@ -675,8 +950,10 @@ async function submitOrder(e) {
   btn.textContent = 'Envoi...';
 
   const sub = cart.reduce((s,x)=>s+x.price*x.qty, 0);
-  const ship = sub >= 1000 ? 0 : 30;
+  const ship = sub >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const orderId = generateOrderId();
   const orderData = {
+    order_id: orderId, // [À COMPLÉTER] assurez-vous que la colonne existe dans Supabase
     customer_name: document.getElementById('ordNom').value.trim(),
     phone: document.getElementById('ordTel').value.trim(),
     city: document.getElementById('ordVille').value.trim(),
@@ -692,25 +969,159 @@ async function submitOrder(e) {
   try {
     const { error } = await sb.from('orders').insert(orderData);
     if (error) console.warn('Erreur Supabase:', error);
-    
-    let msg = `Bonjour NathalMedic,%0A%0A*Nouvelle commande*%0A%0A`;
-    msg += `👤 ${orderData.customer_name}%0A📞 ${orderData.phone}%0A🏙️ ${orderData.city}%0A📍 ${orderData.address}%0A`;
-    if (orderData.note) msg += `📝 ${orderData.note}%0A`;
-    msg += `%0A🛒 Produits:%0A`;
-    cart.forEach(it => { msg += `• ${it.name} x${it.qty} = ${it.price*it.qty} DH%0A`; });
-    msg += `%0A💰 Total: ${sub + ship} DH`;
-    window.open(`https://wa.me/212665440953?text=${msg}`, '_blank');
-    
-    cart = [];
-    saveCart(); renderCart();
-    closeOrderModal();
-    showToast('Commande envoyée ✓');
   } catch (err) {
-    console.error(err);
+    console.warn('Erreur Supabase:', err);
+  }
+
+  // Build WhatsApp message
+  let msg = 'Bonjour NathalMedic,%0A%0A*Nouvelle commande* #' + orderId + '%0A%0A';
+  msg += '👤 ' + orderData.customer_name + '%0A📞 ' + orderData.phone + '%0A🏙️ ' + orderData.city + '%0A📍 ' + orderData.address + '%0A';
+  if (orderData.note) msg += '📝 ' + orderData.note + '%0A';
+  msg += '%0A🛒 Produits:%0A';
+  cart.forEach(it => { msg += '• ' + it.name + ' x' + it.qty + ' = ' + (it.price*it.qty) + ' DH%0A'; });
+  msg += '%0A🚚 Livraison: ' + (ship === 0 ? 'Gratuite' : ship + ' DH') + '%0A';
+  msg += '💰 Total: ' + (sub + ship) + ' DH';
+  const whatsappUrl = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + msg;
+
+  // Fire Purchase event
+  track('Purchase', {
+    value: orderData.total,
+    currency: 'MAD',
+    content_name: orderData.products.map(p => p.nom).join(', '),
+    num_items: orderData.products.reduce((s,p) => s + p.qte, 0),
+    order_id: orderId
+  });
+
+  // Save last order for thank you modal
+  lastOrderData = { ...orderData, whatsappUrl };
+  lastOrderId = orderId;
+
+  // Clear cart
+  cart = [];
+  saveCart(); renderCart();
+  closeOrderModal();
+  showThankYou();
+  btn.disabled = false;
+  btn.innerHTML = old;
+}
+
+function showThankYou() {
+  if (!lastOrderData) return;
+  const d = lastOrderData;
+  document.getElementById('tyName').textContent = d.customer_name.split(' ')[0];
+  document.getElementById('tyOrderId').textContent = '#' + lastOrderId;
+  document.getElementById('tyCount').textContent = d.products.reduce((s,p)=>s+p.qte,0) + ' article(s)';
+  document.getElementById('tyTotal').textContent = d.total + ' DH';
+  document.getElementById('tyShip').textContent = d.shipping === 0 ? 'Gratuite 🎉' : d.shipping + ' DH';
+  document.getElementById('tyWhats').href = d.whatsappUrl;
+  document.getElementById('thankYouModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  // Auto-open WhatsApp (after a small delay so the modal renders)
+  setTimeout(() => {
+    try { window.open(d.whatsappUrl, '_blank'); } catch(e){}
+  }, 600);
+}
+function closeThankYou() {
+  document.getElementById('thankYouModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+// ============================================================
+// LEGAL PAGES (modals)
+// [À COMPLÉTER] Remplacez les textes par vos vrais documents
+// ============================================================
+const LEGAL_PAGES = {
+  privacy: {
+    title: 'Politique de confidentialité',
+    html: `
+      <p class="text-sm text-slate-600 mb-3">Dernière mise à jour : [À COMPLÉTER : date]</p>
+      <p class="text-sm text-slate-600 mb-3">NathalMedic collecte uniquement les données nécessaires au traitement de vos commandes : nom, téléphone, ville, adresse. Ces données ne sont jamais revendues à des tiers.</p>
+      <h3 class="font-bold mt-4 mb-2">Données collectées</h3>
+      <ul class="list-disc list-inside text-sm text-slate-600 space-y-1"><li>Identité (nom)</li><li>Coordonnées (téléphone, adresse)</li><li>Historique de commandes</li></ul>
+      <h3 class="font-bold mt-4 mb-2">Vos droits</h3>
+      <p class="text-sm text-slate-600">Vous pouvez demander la suppression de vos données à tout moment en nous contactant à nathalmedic@gmail.com.</p>
+      <p class="text-sm text-slate-600 mt-3">[À COMPLÉTER : ajoutez les mentions légales complètes conformes à la loi 09-08 marocaine]</p>
+    `
+  },
+  cgv: {
+    title: 'Conditions Générales de Vente',
+    html: `
+      <p class="text-sm text-slate-600 mb-3">Dernière mise à jour : [À COMPLÉTER : date]</p>
+      <h3 class="font-bold mt-4 mb-2">1. Objet</h3>
+      <p class="text-sm text-slate-600">Les présentes CGV régissent la vente de matériel médical via le site NathalMedic.</p>
+      <h3 class="font-bold mt-4 mb-2">2. Prix</h3>
+      <p class="text-sm text-slate-600">Les prix sont indiqués en dirhams marocains (MAD), toutes taxes comprises.</p>
+      <h3 class="font-bold mt-4 mb-2">3. Livraison</h3>
+      <p class="text-sm text-slate-600">Livraison gratuite dès 1000 DH. En dessous, des frais de 30 DH s'appliquent. Délai : 24-48h selon la ville.</p>
+      <h3 class="font-bold mt-4 mb-2">4. Paiement</h3>
+      <p class="text-sm text-slate-600">Paiement à la livraison (cash) ou par virement bancaire.</p>
+      <p class="text-sm text-slate-600 mt-3">[À COMPLÉTER : ajoutez les CGV complètes conformes à la loi marocaine]</p>
+    `
+  },
+  retour: {
+    title: 'Politique de retour et remboursement',
+    html: `
+      <p class="text-sm text-slate-600 mb-3">Dernière mise à jour : [À COMPLÉTER : date]</p>
+      <h3 class="font-bold mt-4 mb-2">Délai de retour</h3>
+      <p class="text-sm text-slate-600">Vous disposez de 7 jours après réception pour retourner un produit non ouvert et non utilisé.</p>
+      <h3 class="font-bold mt-4 mb-2">Conditions</h3>
+      <ul class="list-disc list-inside text-sm text-slate-600 space-y-1"><li>Produit dans son emballage d'origine</li><li>Produit non utilisé</li><li>Facture ou preuve d'achat</li></ul>
+      <h3 class="font-bold mt-4 mb-2">Remboursement</h3>
+      <p class="text-sm text-slate-600">Le remboursement est effectué dans un délai de [À COMPLÉTER : X] jours après réception du retour.</p>
+      <p class="text-sm text-slate-600 mt-3">[À COMPLÉTER : ajoutez les détails complets]</p>
+    `
+  },
+  mentions: {
+    title: 'Mentions légales',
+    html: `
+      <p class="text-sm text-slate-600 mb-3">Conformément à la loi marocaine, voici les informations légales de NathalMedic :</p>
+      <ul class="text-sm text-slate-600 space-y-2 mt-4">
+        <li><strong>Raison sociale :</strong> [À COMPLÉTER]</li>
+        <li><strong>ICE :</strong> [À COMPLÉTER : numéro ICE]</li>
+        <li><strong>RC :</strong> [À COMPLÉTER : numéro Registre de Commerce]</li>
+        <li><strong>Patente :</strong> [À COMPLÉTER]</li>
+        <li><strong>Adresse :</strong> [À COMPLÉTER : adresse complète]</li>
+        <li><strong>Téléphone :</strong> (+212) 665-440953</li>
+        <li><strong>Email :</strong> nathalmedic@gmail.com</li>
+        <li><strong>Directeur de publication :</strong> [À COMPLÉTER]</li>
+        <li><strong>Hébergeur :</strong> [À COMPLÉTER : nom et adresse de l'hébergeur]</li>
+      </ul>
+    `
+  }
+};
+
+function openLegal(type) {
+  const page = LEGAL_PAGES[type];
+  if (!page) return;
+  document.getElementById('legalContent').innerHTML =
+    '<h2 class="text-2xl font-extrabold mb-4">' + page.title + '</h2>' + page.html;
+  document.getElementById('legalModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeLegal() {
+  document.getElementById('legalModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+// ============================================================
+// NEWSLETTER
+// ============================================================
+function subscribeNewsletter(e) {
+  e.preventDefault();
+  const email = document.getElementById('nlEmail').value.trim();
+  if (!email) return;
+  try {
+    const subs = JSON.parse(localStorage.getItem('nm_newsletter') || '[]');
+    if (!subs.includes(email)) {
+      subs.push(email);
+      localStorage.setItem('nm_newsletter', JSON.stringify(subs));
+    }
+    // [À COMPLÉTER] Brancher sur un vrai backend (Supabase / Mailchimp / Brevo)
+    showToast('Merci ! Code -10% envoyé par email ✓');
+    e.target.reset();
+    track('Lead', { value: 10, currency: 'MAD' });
+  } catch (err) {
     showToast('Erreur, réessayez');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = old;
   }
 }
 
@@ -732,6 +1143,20 @@ function showToast(msg) {
 document.getElementById('yr').textContent = new Date().getFullYear();
 renderCart();
 loadData();
+
+// Handle hash change (browser back/forward)
+window.addEventListener('hashchange', () => {
+  const m = location.hash.match(/#p=(\d+)/);
+  if (m) {
+    const id = parseInt(m[1]);
+    if (PRODUCTS.find(x => x.id === id)) {
+      openModal(id, true);
+    }
+  } else {
+    document.getElementById('productModal').classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+});
 </script>
 </body>
 </html>
