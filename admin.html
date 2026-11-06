@@ -351,12 +351,12 @@
     <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
       <div>
         <h2 class="text-2xl font-bold text-slate-800">Bons de livraison</h2>
-        <p class="text-sm text-slate-500 mt-1">Préparez les bons pour vos livreurs avec les frais de livraison.</p>
+        <p class="text-sm text-slate-500 mt-1">Préparez, enregistrez et imprimez vos bons de livraison.</p>
       </div>
       <button onclick="resetDeliveryNote()" class="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-semibold">＋ Nouveau bon</button>
     </div>
 
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-5 mb-8">
       <!-- Client Info -->
       <div class="bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
         <h3 class="font-bold">Informations Client</h3>
@@ -370,7 +370,6 @@
           <input id="dlv-date" type="date" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 outline-none transition">
         </div>
 
-        <!-- 👇 هنا التعديل: حيدنا readonly باش تقدر تبدل -->
         <div>
           <label class="block text-xs font-semibold text-slate-500 mb-1">Référence du bon (Modifiable)</label>
           <input id="dlv-number" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white text-blue-800 font-bold outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition">
@@ -383,7 +382,7 @@
       </div>
 
       <!-- Products & Totals -->
-      <div class="xl:col-span-2 bg-white rounded-2xl border border-slate-200 p-5">
+      <div class="xl:col-span-2 bg-white rounded-2xl border border-slate-200 p-5 flex flex-col">
         <div class="flex justify-between items-center mb-4">
           <h3 class="font-bold">Produits à livrer</h3>
           <button onclick="addDeliveryLine()" class="px-3 py-2 rounded-lg bg-blue-50 text-blue-700 font-bold hover:bg-blue-100 transition">
@@ -421,9 +420,23 @@
           </div>
         </div>
 
-        <button onclick="generateDeliveryNote()" class="mt-6 px-5 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition shadow-md">
-          🖨️ Générer le bon de livraison
-        </button>
+        <div class="flex gap-3 mt-6">
+          <button onclick="saveDeliveryNote()" class="flex-1 px-5 py-3 rounded-xl bg-teal-600 text-white font-bold hover:bg-teal-700 transition shadow-md flex items-center justify-center gap-2">
+            💾 Enregistrer
+          </button>
+          <button onclick="generateDeliveryNote()" class="flex-1 px-5 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition shadow-md flex items-center justify-center gap-2">
+            🖨️ Générer / PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saved Delivery Notes Archive -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-5">
+      <h3 class="font-bold mb-4 text-lg">📁 Archive des bons enregistrés</h3>
+      <div id="saved-dlv-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <div id="saved-dlv-empty" class="text-center py-8 text-slate-400">
+        <p>Aucun bon de livraison enregistré pour le moment.</p>
       </div>
     </div>
   </section>
@@ -643,6 +656,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     // Initialize Delivery Notes when tab is clicked
     if (btn.dataset.tab === 'delivery-notes') {
       initDeliveryNote();
+      renderSavedDeliveryNotes();
     }
   };
 });
@@ -980,7 +994,7 @@ function editProduct(id) {
   document.getElementById('pf-badge').value = p.badge || '';
   document.getElementById('pf-desc').value = p.description || '';
   document.getElementById('pf-image-url').value = p.image_url;
-  document.getElementById('pf-image').value = ''; // 👈 تنظيف الملف باش ما يترفعش القديم
+  document.getElementById('pf-image').value = '';
   fillCategoryDropdown();
   document.getElementById('pf-category').value = p.category_id;
   document.getElementById('pf-image-preview').innerHTML = `<img src="${p.image_url}" class="w-full h-full object-cover"/>`;
@@ -1111,7 +1125,7 @@ function editCategory(id) {
   document.getElementById('cf-desc').value = c.description || '';
   document.getElementById('cf-order').value = c.display_order || 0;
   document.getElementById('cf-image-url').value = c.image_url || '';
-  document.getElementById('cf-image').value = ''; // 👈 تنظيف الملف
+  document.getElementById('cf-image').value = '';
   if (c.image_url) {
     document.getElementById('cf-image-preview').innerHTML = `<img src="${c.image_url}" class="w-full h-full object-cover"/>`;
   }
@@ -1665,6 +1679,7 @@ function initSupplierPurchaseOrders() {
 
 // ============ DELIVERY NOTES LOGIC ============
 const DLV_COUNTER_KEY = 'nathalMedicDeliveryCounter';
+const DLV_SAVED_KEY = 'nathalMedicSavedDeliveryNotes';
 
 // الترقيم التلقائي الشهري الاحترافي
 function dlvNextNumber() {
@@ -1689,8 +1704,36 @@ function dlvNextNumber() {
     count: newCount
   }));
 
-  // التنسيق الاحترافي: NATHAL-BL-YYYY-MM-XXXX
   return `NATHAL-BL-${year}-${month}-${String(newCount).padStart(4, '0')}`;
+}
+
+// دالة باش نسينكورونيزي العداد إلا بدل المستخدم الرقم يدوياً
+function syncDlvCounterFromRef(manualRef) {
+  const match = manualRef.match(/(\d+)$/); // كياخد آخر أرقام فـ الرابط
+  if (!match) return;
+  
+  const manualNum = parseInt(match[1]);
+  if (isNaN(manualNum)) return;
+
+  const now = new Date();
+  const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  
+  let counterData = { month: '', count: 0 };
+  try {
+    const saved = localStorage.getItem(DLV_COUNTER_KEY);
+    if (saved) counterData = JSON.parse(saved);
+  } catch (e) {}
+
+  // إلا كان الرقم اللي كتبو المستخدم أكبر من العداد الحالي، كنرفعو العداد ليه
+  if (counterData.month === currentMonthKey) {
+    if (manualNum > (counterData.count || 0)) {
+      counterData.count = manualNum;
+    }
+  } else {
+    counterData = { month: currentMonthKey, count: manualNum };
+  }
+
+  localStorage.setItem(DLV_COUNTER_KEY, JSON.stringify(counterData));
 }
 
 function initDeliveryNote() {
@@ -1778,23 +1821,96 @@ function resetDeliveryNote() {
   updateDeliveryTotal();
 }
 
-function generateDeliveryNote() {
+// ============ SAVE & ARCHIVE LOGIC ============
+function saveDeliveryNote() {
   const client = document.getElementById('dlv-client-name').value.trim();
   const phone = document.getElementById('dlv-client-phone').value.trim();
   const address = document.getElementById('dlv-client-address').value.trim();
   const city = document.getElementById('dlv-city').value || 'Tanger';
   const date = poFormatDate(document.getElementById('dlv-date').value);
-  const number = document.getElementById('dlv-number').value; // هنا كيقرا الرقم اللي كتبتي ولا اللي تخلى أوتوماتيك
+  const ref = document.getElementById('dlv-number').value;
   const shipFee = Number(document.getElementById('dlv-shipping-fee').value) || 0;
   const lines = dlvReadLines();
 
   if (!client) return alert('أدخل اسم الزبون');
+  if (!ref) return alert('أدخل رقم المرجع');
   if (!lines.length) return alert('أضف منتجاً واحداً على الأقل');
 
+  // Sync counter based on manual ref
+  syncDlvCounterFromRef(ref);
+
   let subtotal = 0;
+  lines.forEach(line => subtotal += (line.qty * line.price));
+  const total = subtotal + shipFee;
+
+  const note = {
+    id: Date.now(),
+    ref, client, phone, address, city, date, lines, subtotal, shipFee, total
+  };
+
+  let saved = [];
+  try {
+    saved = JSON.parse(localStorage.getItem(DLV_SAVED_KEY) || '[]');
+  } catch(e) {}
+  
+  saved.unshift(note); // نزيدوه فالأول
+  localStorage.setItem(DLV_SAVED_KEY, JSON.stringify(saved));
+
+  showToast('✅ Bon de livraison enregistré');
+  renderSavedDeliveryNotes();
+}
+
+function renderSavedDeliveryNotes() {
+  const container = document.getElementById('saved-dlv-list');
+  const empty = document.getElementById('saved-dlv-empty');
+  
+  let saved = [];
+  try {
+    saved = JSON.parse(localStorage.getItem(DLV_SAVED_KEY) || '[]');
+  } catch(e) {}
+
+  if (!saved.length) {
+    container.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  
+  empty.classList.add('hidden');
+  container.innerHTML = saved.map(n => `
+    <div class="bg-slate-50 rounded-xl border border-slate-200 p-4 flex flex-col gap-2">
+      <div class="flex justify-between items-start">
+        <div class="font-bold text-blue-700">${poEscape(n.ref)}</div>
+        <div class="text-xs text-slate-500">${n.date}</div>
+      </div>
+      <div class="text-sm font-semibold text-slate-800">${poEscape(n.client)}</div>
+      <div class="text-xs text-slate-500">${n.city} · ${n.phone}</div>
+      <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-200">
+        <div class="text-lg font-bold text-slate-800">${n.total.toFixed(2)} DH</div>
+        <div class="flex gap-2">
+          <button onclick="printArchivedNote(${n.id})" class="px-3 py-1.5 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-lg text-xs font-bold transition">🖨️ Imprimer</button>
+          <button onclick="deleteArchivedNote(${n.id})" class="px-3 py-1.5 bg-rose-100 text-rose-700 hover:bg-rose-200 rounded-lg text-xs font-bold transition">🗑️</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function deleteArchivedNote(id) {
+  if (!confirm('Supprimer ce bon de livraison de l\'archive ?')) return;
+  let saved = [];
+  try {
+    saved = JSON.parse(localStorage.getItem(DLV_SAVED_KEY) || '[]');
+  } catch(e) {}
+  saved = saved.filter(n => n.id !== id);
+  localStorage.setItem(DLV_SAVED_KEY, JSON.stringify(saved));
+  renderSavedDeliveryNotes();
+  showToast('🗑️ Supprimé de l\'archive');
+}
+
+// ============ PRINT LOGIC (DIRECT & ARCHIVED) ============
+function printDeliveryNoteHTML(ref, client, phone, address, city, date, lines, shipFee, subtotal, total) {
   const rows = lines.map(line => {
     const lineTotal = line.qty * line.price;
-    subtotal += lineTotal;
     return `
       <tr>
         <td>${poEscape(line.name)}</td>
@@ -1805,8 +1921,6 @@ function generateDeliveryNote() {
     `;
   }).join('');
 
-  const total = subtotal + shipFee;
-
   const printWindow = window.open('', '_blank');
   if (!printWindow) return alert('يرجى السماح بالنوافذ المنبثقة');
 
@@ -1815,7 +1929,7 @@ function generateDeliveryNote() {
     <html lang="fr">
     <head>
       <meta charset="UTF-8">
-      <title>Bon de Livraison ${poEscape(number)}</title>
+      <title>Bon de Livraison ${poEscape(ref)}</title>
       <style>
         body{font-family:Arial,sans-serif;color:#20252b;padding:35px}
         .head{display:flex;justify-content:space-between}
@@ -1850,7 +1964,7 @@ function generateDeliveryNote() {
            <div style="font-size:20px;font-weight:bold;color:#258c91">BON DE LIVRAISON</div>
         </div>
       </div>
-      <div class="ref">Réf : ${poEscape(number)}<br>${poEscape(city)}, le ${poEscape(date)}</div>
+      <div class="ref">Réf : ${poEscape(ref)}<br>${poEscape(city)}, le ${poEscape(date)}</div>
       <br><br>
       <div class="details">
         <strong>Destinataire :</strong> ${poEscape(client)}<br>
@@ -1894,6 +2008,36 @@ function generateDeliveryNote() {
   `);
 
   printWindow.document.close();
+}
+
+// طباعة البون اللي كاين فالفورم دابا
+function generateDeliveryNote() {
+  const client = document.getElementById('dlv-client-name').value.trim();
+  const phone = document.getElementById('dlv-client-phone').value.trim();
+  const address = document.getElementById('dlv-client-address').value.trim();
+  const city = document.getElementById('dlv-city').value || 'Tanger';
+  const date = poFormatDate(document.getElementById('dlv-date').value);
+  const ref = document.getElementById('dlv-number').value;
+  const shipFee = Number(document.getElementById('dlv-shipping-fee').value) || 0;
+  const lines = dlvReadLines();
+
+  if (!client) return alert('أدخل اسم الزبون');
+  if (!lines.length) return alert('أضف منتجاً واحداً على الأقل');
+
+  let subtotal = 0;
+  lines.forEach(line => subtotal += (line.qty * line.price));
+  const total = subtotal + shipFee;
+
+  printDeliveryNoteHTML(ref, client, phone, address, city, date, lines, shipFee, subtotal, total);
+}
+
+// طباعة البون من الأرشيف
+function printArchivedNote(id) {
+  let saved = [];
+  try { saved = JSON.parse(localStorage.getItem(DLV_SAVED_KEY) || '[]'); } catch(e) {}
+  const n = saved.find(x => x.id === id);
+  if (!n) return;
+  printDeliveryNoteHTML(n.ref, n.client, n.phone, n.address, n.city, n.date, n.lines, n.shipFee, n.subtotal, n.total);
 }
 
 // ============ INIT ============
